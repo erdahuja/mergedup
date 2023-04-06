@@ -188,7 +188,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 	claims := auth.Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   usr.ID.String(),
-			Issuer:    "service project",
+			Issuer:    "mergedup",
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},

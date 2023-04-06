@@ -9,6 +9,7 @@ import (
 	v1 "mergedup/app/services/app-api/handlers/v1"
 	"mergedup/foundation/web"
 
+	"mergedup/business/auth"
 	"mergedup/business/mid"
 
 	"github.com/jmoiron/sqlx"
@@ -20,6 +21,7 @@ type APIMuxConfig struct {
 	Shutdown chan os.Signal
 	Log      *zap.SugaredLogger
 	DB       *sqlx.DB
+	Auth     *auth.Auth
 }
 
 // APIMux constructs a http.Handler with all application routes defined.
@@ -39,6 +41,7 @@ func APIMux(cfg APIMuxConfig) http.Handler {
 	v1.Register(app, v1.Config{
 		Log: cfg.Log,
 		DB:  cfg.DB,
+		Auth: cfg.Auth,
 	})
 
 	return app

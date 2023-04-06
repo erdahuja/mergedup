@@ -7,7 +7,7 @@ import (
 
 // Configurations exported
 type Configurations struct {
-	Name            string `mapstructure:"NAME"`
+	Secret           string `mapstructure:"SECRET"`
 	APIHost         string `mapstructure:"API_HOST"`
 	DebugHost       string `mapstructure:"DEBUG_HOST"`
 	ReadTimeout     int    `mapstructure:"READ_TIMEOUT"`

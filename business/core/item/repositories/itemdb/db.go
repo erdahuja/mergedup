@@ -1,0 +1,21 @@
+package itemdb
+
+import (
+	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
+)
+
+// Store manages the set of APIs for user database access.
+type Store struct {
+	log    *zap.SugaredLogger
+	db     sqlx.ExtContext
+	inTran bool
+}
+
+// NewStore constructs the api for data access.
+func NewStore(log *zap.SugaredLogger, db *sqlx.DB) *Store {
+	return &Store{
+		log: log,
+		db:  db,
+	}
+}

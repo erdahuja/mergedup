@@ -45,9 +45,7 @@ const (
 	RuleAny          = "allowAny"
 	RuleAdminOnly    = "allowOnlyAdmin"
 	RuleUserOnly     = "allowOnlyUser"
-	SecretKey        = "secret"
 )
-
 // ErrForbidden is returned when a auth issue is identified.
 var ErrForbidden = errors.New("attempted action is not allowed")
 
@@ -55,6 +53,7 @@ var ErrForbidden = errors.New("attempted action is not allowed")
 type Config struct {
 	Log *zap.SugaredLogger
 	DB  *sqlx.DB
+	Secret []byte
 }
 
 // Auth is used to authenticate clients. It can generate a token for a
@@ -64,7 +63,7 @@ type Auth struct {
 	user   *user.Core
 	method jwt.SigningMethod
 	parser *jwt.Parser
-	cache  map[string]string
+	secret []byte
 }
 
 // New creates an Auth to support authentication/authorization.
@@ -80,9 +79,9 @@ func New(cfg Config) (*Auth, error) {
 	a := Auth{
 		log:    cfg.Log,
 		user:   usr,
-		method: jwt.GetSigningMethod(jwt.SigningMethodRS256.Name),
-		parser: jwt.NewParser(jwt.WithValidMethods([]string{jwt.SigningMethodRS256.Name})),
-		cache:  make(map[string]string),
+		secret: cfg.Secret,
+		method: jwt.GetSigningMethod(jwt.SigningMethodHS256.Name),
+		parser: jwt.NewParser(jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Name})),
 	}
 
 	return &a, nil
@@ -95,24 +94,22 @@ func (a *Auth) Authenticate(ctx context.Context, bearerToken string) (Claims, er
 		return Claims{}, errors.New("expected authorization header format: Bearer <token>")
 	}
 
-	var claims Claims
-
 	token, err := jwt.ParseWithClaims(parts[1], &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(a.secret), nil
 	})
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		fmt.Printf("%v %v", claims.Roles, claims.RegisteredClaims.Issuer)
+		fmt.Printf("%v %v", claims.Roles, claims.RegisteredClaims.Issuer)		
+		// Check the database for this user to verify they are still enabled.
+		if !a.isUserEnabled(ctx, *claims) {
+			return Claims{}, fmt.Errorf("user not enabled : %w", err)
+		}
+		return *claims, nil
 	} else {
 		fmt.Println(err)
+		return *claims, err
 	}
 
-	// Check the database for this user to verify they are still enabled.
-	if !a.isUserEnabled(ctx, claims) {
-		return Claims{}, fmt.Errorf("user not enabled : %w", err)
-	}
-
-	return claims, nil
 }
 
 // Authorize attempts to authorize the user with the provided input roles, if
@@ -168,7 +165,7 @@ func (a *Auth) isUserEnabled(ctx context.Context, claims Claims) bool {
 func (a *Auth) GenerateToken(kid string, claims Claims) (string, error) {
 	token := jwt.NewWithClaims(a.method, claims)
 
-	str, err := token.SignedString(SecretKey)
+	str, err := token.SignedString(a.secret)
 	if err != nil {
 		return "", fmt.Errorf("signing token: %w", err)
 	}

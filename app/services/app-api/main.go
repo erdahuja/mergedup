@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	_ "embed"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -20,6 +18,7 @@ import (
 	"mergedup/app/services/debug-api"
 	"mergedup/foundation/logger"
 
+	"mergedup/business/auth"
 	"mergedup/business/sys/database"
 	"mergedup/foundation/config"
 
@@ -30,20 +29,6 @@ import (
 
 const build = "dev"
 
-// @title Cart Service
-// @version 1.0
-// @description This is a generic cart service with RBAC.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:3001
-// @BasePath /v1
 func main() {
 	log, err := logger.New("CART-API")
 	if err != nil {
@@ -107,11 +92,6 @@ func run(log *zap.SugaredLogger) error {
 	return runAPI(cfg, db, log)
 }
 
-func prettyPrint(i interface{}) string {
-	s, _ := json.MarshalIndent(i, "    ", "\t")
-	return string(s)
-}
-
 func setupDB(cfg config.Configurations) (*sqlx.DB, error) {
 	db, err := database.Open(cfg.GetDBConfig())
 	if err != nil {
@@ -126,10 +106,21 @@ func runAPI(cfg config.Configurations, db *sqlx.DB, log *zap.SugaredLogger) erro
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
+	authCfg := auth.Config{
+		Log:       log,
+		DB:        db,
+		Secret: []byte(cfg.Secret),
+	}
+
+	auth, err := auth.New(authCfg)
+	if err != nil {
+		return fmt.Errorf("constructing auth: %w", err)
+	}
 	apiMux := handlers.APIMux(handlers.APIMuxConfig{
 		Shutdown: shutdown,
 		Log:      log,
 		DB:       db,
+		Auth:     auth,
 	})
 
 	api := http.Server{
