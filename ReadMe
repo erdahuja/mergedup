@@ -1,0 +1,18 @@
+# Merge Coding Assignment
+Q. Build a Shopping cart API with following functionalities:
+- Ability to create account with two roles (admin, user) and log in
+- Admin should be able to
+- Add items
+- Suspend user
+- User should be able to
+- List available items
+- Add items to a cart (if there are items in stock)
+- Remove items from their cart
+- Restrict the access to APIs through RBAC mechanism
+- Add unit test with extensive cases wherever possible (Bonus: E2E tests)
+- Follow proper coding conventions and add documentation & code comments wherever necessary
+- Create Readme for easy setup and testing of the API
+
+Note: Candidates may use any coding language, though Golang would be preferable
+
+> Merge Money Ltd │7 Bell Yard, London WC2A 2JR │ Tel +44.203.442.0175│Registration Number: 13463502
