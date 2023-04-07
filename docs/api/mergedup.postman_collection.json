@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "37605187-5b1a-4cdf-86b7-c82e7878094c",
+		"name": "mergedup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26793134"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "create user",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin@example.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"deepak\",\n    \"email\": {\n        \"address\": \"deepak@example.com\",\n        \"name\": \"deepak\"\n    },\n    \"roles\": [\n        \"user\"\n    ],\n    \"password\": \"deepak\",\n    \"passwordConfirm\": \"deepak\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin@example.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v1/users/token/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"users",
+								"token",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjIyMjUsImlhdCI6MTY4MDg1ODYyNSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.PV4JRkWmkQ-z3lyWL2LHV40Bglykokf3xyBGtk2hKs4",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/v1/items",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suspend",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cart",
+			"item": []
+		},
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "view items",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Create item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjM4MTAsImlhdCI6MTY4MDg2MDIxMCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.AGRscERM3QHYJRAsOZDCgg5Ayw8UGLtE_00ZvlJIsIc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test product\",\n    \"quantity\": 10,\n    \"cost\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v1/items",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"items"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

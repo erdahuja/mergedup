@@ -67,9 +67,14 @@ Please use [this api]() for getting bearer token. You have to use basic auth for
 
 Once you have the token you can use the same to try out different api. for users/admin apis will reject/accept as per role defined.
 
+To use cart:
+Create cart using cart api
+post cart item into cart using api
+remove item from cart
+
 ## API
 
-Please download postman collection from [here](https://api.postman.com/collections/26793134-37605187-5b1a-4cdf-86b7-c82e7878094c?access_key=PMAT-01GXDJ5CFTG9SCK2RS99ZGDMTY)
+Please download postman collection from [here](https://elements.getpostman.com/redirect?entityId=26793134-37605187-5b1a-4cdf-86b7-c82e7878094c&entityType=collection)
 
 | API  | Policy |
 | ------------- | ------------- |
@@ -85,6 +90,10 @@ Please download postman collection from [here](https://api.postman.com/collectio
 | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  |
+
+Documentation:
+
+[API](https://github.com/erdahuja/mergedup/docs/api/mergedup.md)
 
 ## DB Design
 POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)
