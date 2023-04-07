@@ -26,7 +26,7 @@ func NewCore(storer Storer) *Core {
 
 type Storer interface {
 	WithinTran(ctx context.Context, fn func(s Storer) error) error
-	Create(ctx context.Context, itm Cart) error
+	Create(ctx context.Context, itm Cart) (Cart, error)
 	QueryByID(ctx context.Context, cartID int64) (Cart, error)
 }
 
@@ -39,9 +39,11 @@ func (c *Core) Create(ctx context.Context, np NewCart) (Cart, error) {
 	}
 
 	tran := func(s Storer) error {
-		if err := s.Create(ctx, crt); err != nil {
+		crtDB, err := s.Create(ctx, crt)
+		if err != nil {
 			return fmt.Errorf("create: %w", err)
 		}
+		crt = crtDB
 		return nil
 	}
 

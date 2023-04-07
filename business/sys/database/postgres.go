@@ -91,8 +91,8 @@ func StatusCheck(ctx context.Context, db *sqlx.DB) error {
 	return db.QueryRowContext(ctx, q).Scan(&tmp)
 }
 
-func QueryRowContext(ctx context.Context, log *zap.SugaredLogger, db sqlx.ExtContext, q string, dest interface{}) interface{} {
-	return db.QueryRowxContext(ctx, q).Scan(&dest)
+func QueryRowContext(ctx context.Context, log *zap.SugaredLogger, db sqlx.ExtContext, q string, dest interface{}) error {
+	return db.QueryRowxContext(ctx, q).Scan(dest)
 }
 
 // WithinTran runs passed function and do commit/rollback at the end.

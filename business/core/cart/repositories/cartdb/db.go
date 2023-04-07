@@ -46,18 +46,27 @@ func (s *Store) WithinTran(ctx context.Context, fn func(s cart.Storer) error) er
 
 // Create adds a Item to the database. It returns the created Item with
 // fields like ID and DateCreated populated.
-func (s *Store) Create(ctx context.Context, cart cart.Cart) error {
+func (s *Store) Create(ctx context.Context, crt cart.Cart) (cart.Cart, error) {
 	const q = `
 	INSERT INTO cart
 		(user_id, date_created, date_updated)
 	VALUES
-		(:user_id, :date_created, :date_updated)`
+		(:user_id, :date_created, :date_updated)
+		`
 
-	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBCart(cart)); err != nil {
-		return fmt.Errorf("namedexeccontext: %w", err)
+	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBCart(crt)); err != nil {
+		return cart.Cart{}, fmt.Errorf("namedexeccontext: %w", err)
 	}
 
-	return nil
+	var id int64
+	qs := `select nextval('cart_id_seq'); `
+	if err := database.QueryRowContext(ctx, s.log, s.db, qs, &id); err != nil {
+		return cart.Cart{}, fmt.Errorf("QueryRowContext: %v", err)
+	}
+
+	crt.ID = id - 1
+
+	return crt, nil
 }
 
 // QueryByID gets the specified user from the database.

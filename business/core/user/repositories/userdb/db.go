@@ -62,14 +62,13 @@ func (s *Store) Create(ctx context.Context, usr user.User) (user.User, error) {
 		return usr, fmt.Errorf("inserting user: %w", err)
 	}
 
-	ud, err := s.QueryByEmail(ctx, usr.Email)
-	if err != nil {
-		if errors.Is(err, database.ErrDBDuplicatedEntry) {
-			return usr, fmt.Errorf("querying: %w", user.ErrUniqueEmail)
-		}
-		return usr, fmt.Errorf("querying user: %w", err)
+	var id int64
+	qs := `select nextval('users_id_seq'); `
+	if err := database.QueryRowContext(ctx, s.log, s.db, qs, &id); err != nil {
+		return user.User{}, fmt.Errorf("QueryRowContext: %v", err)
 	}
-	usr.ID = ud.ID
+
+	usr.ID = id - 1
 	return usr, nil
 }
 
