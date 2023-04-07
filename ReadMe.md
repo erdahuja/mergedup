@@ -36,7 +36,7 @@ As a rule of thumb, import graphs are as follows app imports business imports fo
 For RBAC mechanism, we are using jwt tokens with two roles (admin and user) saved in claims. By using a middleware for each handler we are doing authentication and authorization.
 A cache layer is also added in users db to quick access user roles.
 
-[DB Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf) | [API design](https://github.com/erdahuja/mergedup/docs/api/mergedup.md)
+[DB Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf) | [API design](https://github.com/erdahuja/mergedup/blob/main/docs/api/mergedup.md)
 
 ## Getting started
 For installing Go, please follow
@@ -69,11 +69,11 @@ Please use [api](https://github.com/erdahuja/mergedup/blob/main/docs/api/mergedu
 Once you have the token you can use the same to try out different api. for users/admin apis will reject/accept as per role defined.
 
 To use cart:
-Create cart using cart api
-post cart items into cart 
-remove item from cart
+    Create cart using cart api
+    post cart items into cart 
+    remove item from cart
 
-The quantites will be altered
+The quantites in the items table will be altered.
 
 ## API
 
