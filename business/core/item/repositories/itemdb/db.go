@@ -29,16 +29,15 @@ func NewStore(log *zap.SugaredLogger, db *sqlx.DB) *Store {
 	}
 }
 
-// Create adds a Item to the database. It returns the created Item with
-// fields like ID and DateCreated populated.
-func (s *Store) Create(ctx context.Context, item item.Item) error {
+// Create adds a Item to the database.
+func (s *Store) Create(ctx context.Context, itm item.Item) error {
 	const q = `
-	INSERT INTO products
-		(user_id, name, cost, quantity, date_created, date_updated)
+	INSERT INTO items
+		(name, cost, quantity, date_created, date_updated)
 	VALUES
-		(:user_id, :name, :cost, :quantity, :date_created, :date_updated)`
+		(:name, :cost, :quantity, :date_created, :date_updated)`
 
-	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBItem(item)); err != nil {
+	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBItem(itm)); err != nil {
 		return fmt.Errorf("namedexeccontext: %w", err)
 	}
 
@@ -63,7 +62,6 @@ func (s *Store) Query(ctx context.Context, filter item.QueryFilter) ([]item.Item
 
 // Query gets all Products from the database.
 func (s *Store) Update(ctx context.Context, itm item.Item) error {
-
 	const q = `
 	UPDATE
 		items

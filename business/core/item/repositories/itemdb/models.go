@@ -16,20 +16,20 @@ type dbItem struct {
 	DateUpdated time.Time `db:"date_updated"` // When the item record was last modified.
 }
 
-func toDBItem(prd item.Item) dbItem {
+func toDBItem(itm item.Item) dbItem {
 	prdDB := dbItem{
-		Name:        prd.Name,
-		Cost:        prd.Cost,
-		Quantity:    prd.Quantity,
-		DateCreated: prd.DateCreated.UTC(),
-		DateUpdated: prd.DateUpdated.UTC(),
+		Name:        itm.Name,
+		Cost:        itm.Cost,
+		Quantity:    itm.Quantity,
+		DateCreated: itm.DateCreated.UTC(),
+		DateUpdated: itm.DateUpdated.UTC(),
 	}
 
 	return prdDB
 }
 
 func toCoreItem(dbItm dbItem) item.Item {
-	prd := item.Item{
+	itm := item.Item{
 		ID:          dbItm.ID,
 		Name:        dbItm.Name,
 		Cost:        dbItm.Cost,
@@ -38,7 +38,7 @@ func toCoreItem(dbItm dbItem) item.Item {
 		DateUpdated: dbItm.DateUpdated.In(time.Local),
 	}
 
-	return prd
+	return itm
 }
 
 func toCoreItemSlice(dbItems []dbItem) []item.Item {

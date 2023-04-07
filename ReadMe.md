@@ -24,7 +24,7 @@ The project has app which exposes two http handlers:
 2. Debug API
     it contains pprof, liveness, readiness probes as well Go's debug tooling
 3. Scratch
-    it contains bootstrap code like migration and seed scripts. It can be viewer [schema](), [seed]()
+    it contains bootstrap code like migration and seed scripts. It can be viewed in [schema](), [seed]()
 
 As a rule of thumb, import graphs are as follows app imports business imports foundation.
 
@@ -51,9 +51,9 @@ The command line versions can now be installed straight from the command line it
     In the windows that pops up, click Install, and agree to the Terms of Service.
 
 ## Commands
-"make db": db can be reset using 
-"make run": project can be run using 
-"make status-debug"/"make status-api" : server status can be checked running or not
+`make db`: db can be reset using 
+`make run`: project can be run using 
+`make status-debug`/`make status-api`: server status can be checked running or not
 
 ## First Step
 Two users will be seeded on running migration (already done if you want to skip the step)
@@ -65,11 +65,26 @@ Two users will be seeded on running migration (already done if you want to skip 
 
 Please use [this api]() for getting bearer token. You have to use basic auth for access same api. (authorization header)
 
-Once you have the token you can use the same to try out different api. for users/admin api will reject/accept as per role requirements.
+Once you have the token you can use the same to try out different api. for users/admin apis will reject/accept as per role defined.
 
 ## API
 
-Please download postman collection from [here]()
+Please download postman collection from [here](https://api.postman.com/collections/26793134-37605187-5b1a-4cdf-86b7-c82e7878094c?access_key=PMAT-01GXDJ5CFTG9SCK2RS99ZGDMTY)
+
+| API  | Policy |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
 
 ## DB Design
 POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)

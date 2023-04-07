@@ -43,18 +43,18 @@ func Register(app *web.App, cfg Config) {
 		User: user.NewCore(usercache.NewStore(cfg.Log, userdb.NewStore(cfg.Log, cfg.DB))),
 		Auth: cfg.Auth,
 	}
-	app.Handle(http.MethodGet, version, "/users/token/:id", ugh.Token)               // public api on basic auth, to get auth token
-	app.Handle(http.MethodPost, version, "/users", ugh.Create, authen, ruleAdmin)    // add users (only by admin)
-	app.Handle(http.MethodGet, version, "/users", ugh.Query, authen, ruleAdmin)      // all users
-	app.Handle(http.MethodPut, version, "/users/:id", ugh.Update, authen, ruleAdmin) // update user
-	app.Handle(http.MethodGet, version, "/users/:id", ugh.QueryByID, authen, ruleAny)
+	app.Handle(http.MethodGet, version, "/users/token/:id", ugh.Token)                 // public api on basic auth, to get auth token
+	app.Handle(http.MethodPost, version, "/users", ugh.Create, authen, ruleAdmin)      // add users (only by admin)
+	app.Handle(http.MethodGet, version, "/users", ugh.Query, authen, ruleAdmin)        // all users
+	app.Handle(http.MethodPatch, version, "/users/:id", ugh.Update, authen, ruleAdmin) // update user
+	app.Handle(http.MethodGet, version, "/users/:id", ugh.QueryByID, authen, ruleAny)  // see any one user
 
 	igh := itemgrp.Handlers{
 		Item: item.NewCore(itemdb.NewStore(cfg.Log, cfg.DB)),
 		Auth: cfg.Auth,
 	}
-	app.Handle(http.MethodPost, version, "/items", igh.Create, authen, ruleAdmin)
-	app.Handle(http.MethodGet, version, "/items", igh.Query, authen, ruleAny)
+	app.Handle(http.MethodPost, version, "/items", igh.Create, authen, ruleAdmin) // create item, only admin
+	app.Handle(http.MethodGet, version, "/items", igh.Query, authen, ruleAny)     // view items
 
 	cgh := cartgrp.Handlers{
 		Cart:     cart.NewCore(cartdb.NewStore(cfg.Log, cfg.DB)),
@@ -62,9 +62,7 @@ func Register(app *web.App, cfg Config) {
 		Item:     item.NewCore(itemdb.NewStore(cfg.Log, cfg.DB)),
 		Auth:     cfg.Auth,
 	}
-
-	app.Handle(http.MethodPost, version, "/cart", cgh.Create, authen, ruleUser) // add a new cart
-
+	app.Handle(http.MethodPost, version, "/cart", cgh.Create, authen, ruleUser)                   // add a new cart
 	app.Handle(http.MethodPost, version, "/cart-items/:id", cgh.CreateCartItem, authen, ruleUser) // add item in cart
 	app.Handle(http.MethodGet, version, "/cart-items/:id", cgh.QueryByID, authen, ruleUser)       // view cart
 	app.Handle(http.MethodDelete, version, "/cart-items/:id", cgh.DeleteItem, authen, ruleUser)   // remove itm from cart
