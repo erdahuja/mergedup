@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/mail"
 	"strconv"
 
 	"mergedup/business/core/user"
@@ -49,21 +48,29 @@ func (s *Store) WithinTran(ctx context.Context, fn func(s user.Storer) error) er
 }
 
 // Create inserts a new user into the database.
-func (s *Store) Create(ctx context.Context, usr user.User) error {
+func (s *Store) Create(ctx context.Context, usr user.User) (user.User, error) {
 	const q = `
 	INSERT INTO users
-		(name, email, password_hash, roles, active, date_created, date_updated)
+		(name, email, roles, password_hash, active, date_created, date_updated)
 	VALUES
-		(:name, :email, :password_hash, :roles, :active, :date_created, :date_updated)`
+		(:name, :email, :roles, :password_hash, :active, :date_created, :date_updated)`
 
 	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBUser(usr)); err != nil {
 		if errors.Is(err, database.ErrDBDuplicatedEntry) {
-			return fmt.Errorf("create: %w", user.ErrUniqueEmail)
+			return usr, fmt.Errorf("create: %w", user.ErrUniqueEmail)
 		}
-		return fmt.Errorf("inserting user: %w", err)
+		return usr, fmt.Errorf("inserting user: %w", err)
 	}
 
-	return nil
+	ud, err := s.QueryByEmail(ctx, usr.Email)
+	if err != nil {
+		if errors.Is(err, database.ErrDBDuplicatedEntry) {
+			return usr, fmt.Errorf("querying: %w", user.ErrUniqueEmail)
+		}
+		return usr, fmt.Errorf("querying user: %w", err)
+	}
+	usr.ID = ud.ID
+	return usr, nil
 }
 
 // Update replaces a user document in the database.
@@ -76,9 +83,10 @@ func (s *Store) Update(ctx context.Context, usr user.User) error {
 		"email" = :email,
 		"roles" = :roles,
 		"password_hash" = :password_hash,
-		"date_updated" = :date_updated
+		"date_updated" = :date_updated,
+		active = :active
 	WHERE
-		user_id = :user_id`
+		id = :id`
 
 	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBUser(usr)); err != nil {
 		if errors.Is(err, database.ErrDBDuplicatedEntry) {
@@ -157,11 +165,11 @@ func (s *Store) QueryByID(ctx context.Context, id int) (user.User, error) {
 }
 
 // QueryByEmail gets the specified user from the database by email.
-func (s *Store) QueryByEmail(ctx context.Context, email mail.Address) (user.User, error) {
+func (s *Store) QueryByEmail(ctx context.Context, email string) (user.User, error) {
 	data := struct {
 		Email string `db:"email"`
 	}{
-		Email: email.Address,
+		Email: email,
 	}
 
 	const q = `

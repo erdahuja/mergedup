@@ -2,7 +2,6 @@ package usercache
 
 import (
 	"context"
-	"net/mail"
 	"strconv"
 	"sync"
 
@@ -36,14 +35,15 @@ func (s *Store) WithinTran(ctx context.Context, fn func(s user.Storer) error) er
 }
 
 // Create inserts a new user into the database.
-func (s *Store) Create(ctx context.Context, usr user.User) error {
-	if err := s.storer.Create(ctx, usr); err != nil {
-		return err
+func (s *Store) Create(ctx context.Context, usr user.User) (user.User, error) {
+	ud, err := s.storer.Create(ctx, usr)
+	if err != nil {
+		return usr, err
 	}
 
 	s.writeCache(usr)
 
-	return nil
+	return ud, nil
 }
 
 // Update replaces a user document in the database.
@@ -91,8 +91,8 @@ func (s *Store) QueryByID(ctx context.Context, userID int) (user.User, error) {
 }
 
 // QueryByEmail gets the specified user from the database by email.
-func (s *Store) QueryByEmail(ctx context.Context, email mail.Address) (user.User, error) {
-	cachedUsr, ok := s.readCache(email.Address)
+func (s *Store) QueryByEmail(ctx context.Context, email string) (user.User, error) {
+	cachedUsr, ok := s.readCache(email)
 	if ok {
 		return cachedUsr, nil
 	}
@@ -128,7 +128,7 @@ func (s *Store) writeCache(usr user.User) {
 	defer s.mu.Unlock()
 
 	s.cache[strconv.FormatInt(usr.ID, 10)] = &usr
-	s.cache[usr.Email.Address] = &usr
+	s.cache[usr.Email] = &usr
 }
 
 // deleteCache performs a safe removal from the cache for the specified user.
@@ -137,5 +137,5 @@ func (s *Store) deleteCache(usr user.User) {
 	defer s.mu.Unlock()
 
 	delete(s.cache, strconv.FormatInt(usr.ID, 10))
-	delete(s.cache, usr.Email.Address)
+	delete(s.cache, usr.Email)
 }

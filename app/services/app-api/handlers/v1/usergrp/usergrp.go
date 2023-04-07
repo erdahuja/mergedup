@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/mail"
 	"strconv"
 	"time"
 
@@ -63,11 +62,6 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
-	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID {
-		return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
-	}
-
 	usr, err := h.User.QueryByID(ctx, id)
 	if err != nil {
 		switch {
@@ -105,8 +99,10 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 	}
 
 	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID {
-		return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
+	if !h.Auth.IsAdmin(claims.Roles, auth.RuleAdminOnly) {
+		if claims.Subject != userID {
+			return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
+		}
 	}
 
 	id, err := strconv.Atoi(userID)
@@ -144,12 +140,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 		return auth.NewAuthError("must provide email and password in Basic auth")
 	}
 
-	addr, err := mail.ParseAddress(email)
-	if err != nil {
-		return auth.NewAuthError("invalid email format")
-	}
-
-	usr, err := h.User.Authenticate(ctx, *addr, pass)
+	usr, err := h.User.Authenticate(ctx, email, pass)
 	if err != nil {
 		switch {
 		case errors.Is(err, user.ErrNotFound):
@@ -163,7 +154,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 
 	claims := auth.Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   strconv.FormatInt(usr.ID, 10),
+			Subject:   uid,
 			Issuer:    "mergedup",
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
@@ -174,7 +165,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 	var tkn struct {
 		Token string `json:"token"`
 	}
-	tkn.Token, err = h.Auth.GenerateToken(uid, claims)
+	tkn.Token, err = h.Auth.GenerateToken(claims)
 	if err != nil {
 		return fmt.Errorf("generating token: %w", err)
 	}

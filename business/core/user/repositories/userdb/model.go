@@ -1,7 +1,6 @@
 package userdb
 
 import (
-	"net/mail"
 	"time"
 
 	"mergedup/business/core/user"
@@ -30,7 +29,7 @@ func toDBUser(usr user.User) dbUser {
 	return dbUser{
 		ID:           usr.ID,
 		Name:         usr.Name,
-		Email:        usr.Email.Address,
+		Email:        usr.Email,
 		Roles:        roles,
 		PasswordHash: usr.PasswordHash,
 		Active:       usr.Active,
@@ -40,9 +39,7 @@ func toDBUser(usr user.User) dbUser {
 }
 
 func toCoreUser(dbUsr dbUser) user.User {
-	addr := mail.Address{
-		Address: dbUsr.Email,
-	}
+	addr := dbUsr.Email
 
 	roles := make([]user.Role, len(dbUsr.Roles))
 	for i, value := range dbUsr.Roles {

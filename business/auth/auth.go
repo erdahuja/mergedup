@@ -92,28 +92,46 @@ func (a *Auth) Authenticate(ctx context.Context, bearerToken string) (Claims, er
 // otherwise the user is authorized.
 func (a *Auth) Authorize(ctx context.Context, claims Claims, rule string) error {
 
-	if rule == RuleAny {
-		for _, role := range claims.Roles {
-			if role == user.RoleAdmin || role == user.RoleUser {
-				return nil
-			}
-		}
-	} else if rule == RuleAdminOnly {
-		for _, role := range claims.Roles {
-			if role == user.RoleAdmin {
-				return nil
-			}
-		}
+	if ok := a.IsAny(claims.Roles, rule); ok {
+		return nil
+	}
 
-	} else if rule == RuleUserOnly {
-		for _, role := range claims.Roles {
-			if role == user.RoleUser {
-				return nil
-			}
-		}
+	if ok := a.IsAdmin(claims.Roles, rule); ok {
+		return nil
+	}
+
+	if ok := a.IsUser(claims.Roles, rule); ok {
+		return nil
 	}
 
 	return ErrForbidden
+}
+
+func (a *Auth) IsAdmin(roles []user.Role, rule string) bool {
+	for _, role := range roles {
+		if role == user.RoleAdmin {
+			return true
+		}
+	}
+	return false
+}
+
+func (a *Auth) IsUser(roles []user.Role, rule string) bool {
+	for _, role := range roles {
+		if role == user.RoleUser {
+			return true
+		}
+	}
+	return false
+}
+
+func (a *Auth) IsAny(roles []user.Role, rule string) bool {
+	for _, role := range roles {
+		if role == user.RoleAdmin || role == user.RoleUser {
+			return true
+		}
+	}
+	return false
 }
 
 // isUserEnabled hits the database and checks the user is not disabled. If the
@@ -137,7 +155,7 @@ func (a *Auth) isUserEnabled(ctx context.Context, claims Claims) bool {
 }
 
 // GenerateToken generates a signed JWT token string representing the user Claims.
-func (a *Auth) GenerateToken(kid string, claims Claims) (string, error) {
+func (a *Auth) GenerateToken(claims Claims) (string, error) {
 	token := jwt.NewWithClaims(a.method, claims)
 
 	str, err := token.SignedString(a.secret)

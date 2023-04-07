@@ -7,7 +7,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/mail"
 	"time"
 
 	"mergedup/business/sys/validate"
@@ -61,9 +60,11 @@ func (c *Core) Create(ctx context.Context, nu NewUser) (User, error) {
 	}
 
 	tran := func(s Storer) error {
-		if err := s.Create(ctx, usr); err != nil {
+		ud, err := s.Create(ctx, usr)
+		if err != nil {
 			return fmt.Errorf("create: %w", err)
 		}
+		usr.ID = ud.ID
 		return nil
 	}
 
@@ -86,7 +87,7 @@ func (c *Core) Update(ctx context.Context, usr User, uu UpdateUser) (User, error
 	if uu.Email != nil {
 		usr.Email = *uu.Email
 	}
-	if uu.Roles != nil {
+	if uu.Roles != nil && len(uu.Roles) > 0 {
 		usr.Roles = uu.Roles
 	}
 	if uu.Password != nil {
@@ -139,7 +140,7 @@ func (c *Core) QueryByID(ctx context.Context, userID int) (User, error) {
 }
 
 // QueryByEmail gets the specified user from the database by email.
-func (c *Core) QueryByEmail(ctx context.Context, email mail.Address) (User, error) {
+func (c *Core) QueryByEmail(ctx context.Context, email string) (User, error) {
 	user, err := c.storer.QueryByEmail(ctx, email)
 	if err != nil {
 		return User{}, fmt.Errorf("query: %w", err)
@@ -151,7 +152,7 @@ func (c *Core) QueryByEmail(ctx context.Context, email mail.Address) (User, erro
 // Authenticate finds a user by their email and verifies their password. On
 // success it returns a Claims User representing this user. The claims can be
 // used to generate a token for future authentication.
-func (c *Core) Authenticate(ctx context.Context, email mail.Address, password string) (User, error) {
+func (c *Core) Authenticate(ctx context.Context, email string, password string) (User, error) {
 	usr, err := c.storer.QueryByEmail(ctx, email)
 	if err != nil {
 		return User{}, fmt.Errorf("query: %w", err)

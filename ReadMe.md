@@ -58,6 +58,7 @@ The command line versions can now be installed straight from the command line it
 
 ## First Step
 Two users will be seeded on running migration (already done if you want to skip the step)
+
     username: admin@example.com
     password: admin
 
@@ -69,6 +70,7 @@ Please use [api](https://github.com/erdahuja/mergedup/blob/main/docs/api/mergedu
 Once you have the token you can use the same to try out different api. for users/admin apis will reject/accept as per role defined.
 
 To use cart:
+
     Create cart using cart api
     post cart items into cart 
     remove item from cart
@@ -102,6 +104,15 @@ Documentation:
 POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)
 We are using hosted db for same for which "dev.env" file is provided already.
 No db setup is required.
+
+For pgAdmin exploration, credentials are available in a env file (though a secret manager would be ideal)
+
+Sharing test credentials here
+```DB_USERNAME=ocqbsygl
+DB_PASSWORD=OTM2KccCSHPVll4u9rPZive247GuefZb
+DB_NAME=ocqbsygl
+DB_HOST=tiny.db.elephantsql.com
+```
 
 [Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf)
 

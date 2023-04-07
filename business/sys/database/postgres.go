@@ -91,6 +91,10 @@ func StatusCheck(ctx context.Context, db *sqlx.DB) error {
 	return db.QueryRowContext(ctx, q).Scan(&tmp)
 }
 
+func QueryRowContext(ctx context.Context, log *zap.SugaredLogger, db sqlx.ExtContext, q string, dest interface{}) interface{} {
+	return db.QueryRowxContext(ctx, q).Scan(&dest)
+}
+
 // WithinTran runs passed function and do commit/rollback at the end.
 func WithinTran(ctx context.Context, log *zap.SugaredLogger, db *sqlx.DB, fn func(*sqlx.Tx) error) error {
 
@@ -184,13 +188,6 @@ func queryString(query string, args any) string {
 // necessary.
 func NamedQuerySlice[T any](ctx context.Context, log *zap.SugaredLogger, db sqlx.ExtContext, query string, data any, dest *[]T) error {
 	return namedQuerySlice(ctx, log, db, query, data, dest, false)
-}
-
-// NamedQuerySliceUsingIN is a helper function for executing queries that return
-// a collection of data to be unmarshalled into a slice where field replacement
-// is necessary. Use this if the query has an IN clause.
-func NamedQuerySliceUsingIN[T any](ctx context.Context, log *zap.SugaredLogger, db sqlx.ExtContext, query string, data any, dest *[]T) error {
-	return namedQuerySlice(ctx, log, db, query, data, dest, true)
 }
 
 func namedQuerySlice[T any](ctx context.Context, log *zap.SugaredLogger, db sqlx.ExtContext, query string, data any, dest *[]T, withIn bool) error {

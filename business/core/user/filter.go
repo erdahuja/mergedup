@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"net/mail"
 	"regexp"
 )
 
@@ -13,9 +12,9 @@ var sqlInjection = regexp.MustCompile("^[A-Za-z0-9_]+$")
 
 // QueryFilter holds the available fields a query can be filtered on.
 type QueryFilter struct {
-	ID    *int64   `validate:"omitempty,uuid4"`
-	Name  *string       `validate:"omitempty,min=3"`
-	Email *mail.Address `validate:"omitempty,email"`
+	ID    *int64  `validate:"omitempty,uuid4"`
+	Name  *string `validate:"omitempty,min=3"`
+	Email *string `validate:"omitempty,email"`
 }
 
 // ByID sets the ID field of the QueryFilter value.
@@ -40,8 +39,8 @@ func (f *QueryFilter) ByName(name string) error {
 }
 
 // ByEmail sets the Email field of the QueryFilter value.
-func (f *QueryFilter) ByEmail(email mail.Address) {
-	var zero mail.Address
+func (f *QueryFilter) ByEmail(email string) {
+	var zero string
 	if email != zero {
 		f.Email = &email
 	}
