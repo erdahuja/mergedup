@@ -2,8 +2,6 @@ package cart
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 // Core manages the set of APIs for user access.
@@ -20,12 +18,12 @@ func NewCore(storer Storer) *Core {
 
 // QueryFilter holds the available fields a query can be filtered on.
 type QueryFilter struct {
-	ID    *uuid.UUID    `validate:"omitempty,uuid4"`
+	ID    *int64   `validate:"omitempty,uuid4"`
 }
 
 // ByID sets the ID field of the QueryFilter value.
-func (f *QueryFilter) ByID(id uuid.UUID) {
-	var zero uuid.UUID
+func (f *QueryFilter) ByID(id int64) {
+	var zero int64
 	if id != zero {
 		f.ID = &id
 	}
@@ -36,5 +34,5 @@ type Storer interface {
 	Create(ctx context.Context, itm Cart) error
 	Delete(ctx context.Context, itm Cart) error
 	Query(ctx context.Context, filter QueryFilter) ([]Cart, error)
-	QueryByID(ctx context.Context, CartID uuid.UUID) (Cart, error)
+	QueryByID(ctx context.Context, CartID int) (Cart, error)
 }

@@ -2,12 +2,12 @@
 Q. Build a Shopping cart API with following functionalities:
 - Ability to create account with two roles (admin, user) and log in
 - Admin should be able to
-- Add items
-- Suspend user
+    - Add items
+    - Suspend user
 - User should be able to
-- List available items
-- Add items to a cart (if there are items in stock)
-- Remove items from their cart
+    - List available items
+    - Add items to a cart (if there are items in stock)
+    - Remove items from their cart
 - Restrict the access to APIs through RBAC mechanism
 - Add unit test with extensive cases wherever possible (Bonus: E2E tests)
 - Follow proper coding conventions and add documentation & code comments wherever necessary

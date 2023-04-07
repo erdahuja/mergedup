@@ -5,7 +5,6 @@ import (
 	"context"
 	"mergedup/foundation/config"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -38,14 +37,14 @@ func New(dbname, table string,
 
 // QueryFilter holds the available fields a query can be filtered on.
 type QueryFilter struct {
-	ID    *uuid.UUID    `validate:"omitempty,uuid4"`
+	Quantity    *int   `validate:"omitempty,uuid4"`
 }
 
 // ByID sets the ID field of the QueryFilter value.
-func (f *QueryFilter) ByID(id uuid.UUID) {
-	var zero uuid.UUID
-	if id != zero {
-		f.ID = &id
+func (f *QueryFilter) ByQuantity(q int) {
+	var zero int
+	if q != zero {
+		f.Quantity = &q
 	}
 }
 
@@ -54,7 +53,7 @@ type Storer interface {
 	Create(ctx context.Context, itm Item) error
 	Delete(ctx context.Context, itm Item) error
 	Query(ctx context.Context, filter QueryFilter) ([]Item, error)
-	QueryByID(ctx context.Context, ItemID uuid.UUID) (Item, error)
+	QueryByID(ctx context.Context, ItemID int) (Item, error)
 }
 
 // Core manages the set of APIs for user access.

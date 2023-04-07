@@ -32,7 +32,7 @@ type Storer interface {
 	Create(ctx context.Context, usr User) error
 	Update(ctx context.Context, usr User) error
 	Delete(ctx context.Context, usr User) error
-	Query(ctx context.Context, filter QueryFilter) ([]User, error)
+	Query(ctx context.Context) ([]User, error)// ideally it should have pagination
 	QueryByID(ctx context.Context, userID int64) (User, error)
 	QueryByEmail(ctx context.Context, email mail.Address) (User, error)
 }
@@ -130,12 +130,9 @@ func (c *Core) Delete(ctx context.Context, usr User) error {
 }
 
 // Query retrieves a list of existing users from the database.
-func (c *Core) Query(ctx context.Context, filter QueryFilter) ([]User, error) {
-	if err := validate.Check(filter); err != nil {
-		return nil, fmt.Errorf("validating filter: %w", err)
-	}
+func (c *Core) Query(ctx context.Context) ([]User, error) {
 
-	users, err := c.storer.Query(ctx, filter)
+	users, err := c.storer.Query(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("query: %w", err)
 	}

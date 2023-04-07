@@ -2,6 +2,7 @@ package cartcache
 
 import (
 	"mergedup/business/core/cart"
+	"strconv"
 	"sync"
 
 	"go.uber.org/zap"
@@ -42,7 +43,7 @@ func (s *Store) writeCache(crt cart.Cart) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.cache[crt.ID.String()] = &crt
+	s.cache[strconv.Itoa(int(crt.ID))] = &crt
 }
 
 // deleteCache performs a safe removal from the cache for the specified user.
@@ -50,5 +51,5 @@ func (s *Store) deleteCache(crt cart.Cart) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	delete(s.cache, crt.ID.String())
+	delete(s.cache, strconv.Itoa(int(crt.ID)))
 }

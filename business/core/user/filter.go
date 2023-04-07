@@ -4,8 +4,6 @@ import (
 	"errors"
 	"net/mail"
 	"regexp"
-
-	"github.com/google/uuid"
 )
 
 // Used to check for sql injection problems.
@@ -15,14 +13,14 @@ var sqlInjection = regexp.MustCompile("^[A-Za-z0-9_]+$")
 
 // QueryFilter holds the available fields a query can be filtered on.
 type QueryFilter struct {
-	ID    *uuid.UUID    `validate:"omitempty,uuid4"`
+	ID    *int64   `validate:"omitempty,uuid4"`
 	Name  *string       `validate:"omitempty,min=3"`
 	Email *mail.Address `validate:"omitempty,email"`
 }
 
 // ByID sets the ID field of the QueryFilter value.
-func (f *QueryFilter) ByID(id uuid.UUID) {
-	var zero uuid.UUID
+func (f *QueryFilter) ByID(id int64) {
+	var zero int64
 	if id != zero {
 		f.ID = &id
 	}

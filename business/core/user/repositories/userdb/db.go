@@ -1,13 +1,11 @@
 package userdb
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"fmt"
 	"net/mail"
 	"strconv"
-	"strings"
 
 	"mergedup/business/core/user"
 
@@ -114,27 +112,7 @@ func (s *Store) Delete(ctx context.Context, usr user.User) error {
 }
 
 // Query retrieves a list of existing users from the database.
-func (s *Store) Query(ctx context.Context, filter user.QueryFilter) ([]user.User, error) {
-	data := struct {
-		ID          string `db:"user_id"`
-		Name        string `db:"name"`
-		Email       string `db:"email"`
-	}{
-	}
-
-	var wc []string
-	if filter.ID != nil {
-		data.ID = (*filter.ID).String()
-		wc = append(wc, "user_id = :user_id")
-	}
-	if filter.Name != nil {
-		data.Name = fmt.Sprintf("%%%s%%", *filter.Name)
-		wc = append(wc, "name LIKE :name")
-	}
-	if filter.Email != nil {
-		data.Email = (*filter.Email).String()
-		wc = append(wc, "email = :email")
-	}
+func (s *Store) Query(ctx context.Context) ([]user.User, error) {
 
 	const q = `
 	SELECT
@@ -142,15 +120,9 @@ func (s *Store) Query(ctx context.Context, filter user.QueryFilter) ([]user.User
 	FROM
 		users
 	`
-	buf := bytes.NewBufferString(q)
-
-	if len(wc) > 0 {
-		buf.WriteString("WHERE ")
-		buf.WriteString(strings.Join(wc, " AND "))
-	}
 	
 	var usrs []dbUser
-	if err := database.NamedQuerySlice(ctx, s.log, s.db, buf.String(), data, &usrs); err != nil {
+	if err := database.NamedQuerySlice(ctx, s.log, s.db, q, nil, &usrs); err != nil {
 		return nil, fmt.Errorf("selecting users: %w", err)
 	}
 

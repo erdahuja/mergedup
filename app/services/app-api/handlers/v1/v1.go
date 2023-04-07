@@ -34,10 +34,10 @@ func Register(app *web.App, cfg Config) {
 		User: user.NewCore(usercache.NewStore(cfg.Log, userdb.NewStore(cfg.Log, cfg.DB))),
 		Auth: cfg.Auth,
 	}
-	app.Handle(http.MethodGet, version, "/users/token/:id", ugh.Token)
-	app.Handle(http.MethodPost, version, "/users", ugh.Create, authen, ruleAdmin)
-	app.Handle(http.MethodGet, version, "/users", ugh.Query, authen, ruleAdmin)
-	app.Handle(http.MethodPut, version, "/users/:id", ugh.Update, authen, ruleAdmin)
+	app.Handle(http.MethodGet, version, "/users/token/:id", ugh.Token)// public api on basic auth, to get auth token
+	app.Handle(http.MethodPost, version, "/users", ugh.Create, authen, ruleAdmin)// add users (only by admin)
+	app.Handle(http.MethodGet, version, "/users", ugh.Query, authen, ruleAdmin)// all users
+	app.Handle(http.MethodPut, version, "/users/:id", ugh.Update, authen, ruleAdmin)// update user
 	app.Handle(http.MethodGet, version, "/users/:id", ugh.QueryByID, authen, ruleAny)
 	
 	// pgh := itemgrp.Handlers{

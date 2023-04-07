@@ -15,7 +15,6 @@ import (
 	"mergedup/foundation/web"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 )
 
 // Set of error variables for handling user group errors.
@@ -59,14 +58,11 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
-	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
-		return auth.NewAuthError("auth failed")
-	}
 	id, err := strconv.Atoi(userID)
 	if err != nil {
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
+
 	usr, err := h.User.QueryByID(ctx, int64(id))
 	if err != nil {
 		switch {
@@ -88,12 +84,7 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 // Query returns a list of users with paging.
 func (h Handlers) Query(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 
-	filter, err := parseFilter(r)
-	if err != nil {
-		return web.NewRequestError(err, http.StatusBadRequest)
-	}
-
-	users, err := h.User.Query(ctx, filter)
+	users, err := h.User.Query(ctx)
 	if err != nil {
 		return fmt.Errorf("unable to query for users: %w", err)
 	}
@@ -106,11 +97,6 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 	userID := web.Param(r, "id")
 	if userID == "" {
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
-	}
-
-	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
-		return auth.NewAuthError("auth failed")
 	}
 
 	id, err := strconv.Atoi(userID)
@@ -184,24 +170,4 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 	}
 
 	return web.Respond(ctx, w, tkn, http.StatusOK)
-}
-
-func parseFilter(r *http.Request) (user.QueryFilter, error) {
-	values := r.URL.Query()
-
-	var filter user.QueryFilter
-
-	if id, err := uuid.Parse(values.Get("id")); err == nil {
-		filter.ByID(id)
-	}
-
-	if err := filter.ByName(values.Get("name")); err != nil {
-		return user.QueryFilter{}, err
-	}
-
-	if email, err := mail.ParseAddress(values.Get("email")); err == nil {
-		filter.ByEmail(*email)
-	}
-
-	return filter, nil
 }

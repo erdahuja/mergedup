@@ -26,12 +26,7 @@ type NewUser struct {
 	PasswordConfirm string       `json:"passwordConfirm" validate:"eqfield=Password"`
 }
 
-// UpdateUser defines what information may be provided to modify an existing
-// User. All fields are optional so clients can send just the fields they want
-// changed. It uses pointer fields so we can differentiate between a field that
-// was not provided and a field that was provided as explicitly blank. Normally
-// we do not want to use pointers to basic types but we make exceptions around
-// marshalling/unmarshalling.
+// UpdateUser have fields which clients can send just the fields to update
 type UpdateUser struct {
 	Name            *string       `json:"name"`
 	Email           *mail.Address `json:"email" validate:"omitempty,email"`
