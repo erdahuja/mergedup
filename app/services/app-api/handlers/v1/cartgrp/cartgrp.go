@@ -77,7 +77,7 @@ func (h Handlers) CreateCartItem(ctx context.Context, w http.ResponseWriter, r *
 
 // QueryByID returns a user by its ID.
 func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	cartID := web.Param(r, "id")
+	cartID := web.Param(r, "cartID")
 	if cartID == "" {
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}

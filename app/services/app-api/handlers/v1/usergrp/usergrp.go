@@ -63,6 +63,11 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
+	claims := auth.GetClaims(ctx)
+	if claims.Subject != userID {
+		return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
+	}
+
 	usr, err := h.User.QueryByID(ctx, id)
 	if err != nil {
 		switch {
@@ -97,6 +102,11 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 	userID := web.Param(r, "id")
 	if userID == "" {
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
+	}
+
+	claims := auth.GetClaims(ctx)
+	if claims.Subject != userID {
+		return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
 	}
 
 	id, err := strconv.Atoi(userID)

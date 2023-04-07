@@ -4,11 +4,11 @@ db:
 run:
 	go run app/services/app-api/main.go
 
+status-api:
+	curl -il localhost:3000/v1/status
+
 status-debug:
 	curl -sS localhost:4000/debug/liveness
-
-status-api:
-	curl -il localhost:3000/status
 
 tidy:
 	go mod tidy

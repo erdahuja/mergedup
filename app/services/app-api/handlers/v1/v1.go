@@ -62,10 +62,10 @@ func Register(app *web.App, cfg Config) {
 		Item:     item.NewCore(itemdb.NewStore(cfg.Log, cfg.DB)),
 		Auth:     cfg.Auth,
 	}
-	app.Handle(http.MethodPost, version, "/cart", cgh.Create, authen, ruleUser)                   // add a new cart
-	app.Handle(http.MethodPost, version, "/cart-items", cgh.CreateCartItem, authen, ruleUser) // add item in cart
-	app.Handle(http.MethodGet, version, "/cart-items/:id", cgh.QueryByID, authen, ruleUser)       // view cart
-	app.Handle(http.MethodDelete, version, "/cart-items/:id", cgh.DeleteItem, authen, ruleUser)   // remove itm from cart
+	app.Handle(http.MethodPost, version, "/cart", cgh.Create, authen, ruleUser)                 // add a new cart
+	app.Handle(http.MethodPost, version, "/cart-items", cgh.CreateCartItem, authen, ruleUser)   // add item in cart
+	app.Handle(http.MethodGet, version, "/cart-items/:cartID", cgh.QueryByID, authen, ruleUser)     // view cart
+	app.Handle(http.MethodDelete, version, "/cart-items", cgh.DeleteItem, authen, ruleUser) // remove itm from cart
 
 	app.Handle(http.MethodGet, version, "/status", ugh.Status)
 

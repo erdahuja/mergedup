@@ -24,7 +24,7 @@ The project has app which exposes two http handlers:
 2. Debug API
     it contains pprof, liveness, readiness probes as well Go's debug tooling
 3. Scratch
-    it contains bootstrap code like migration and seed scripts. It can be viewed in [schema](), [seed]()
+    it contains bootstrap code like migration and seed scripts. It can be viewed in [schema](https://github.com/erdahuja/mergedup/blob/main/business/data/dbschema/sql/schema.sql), [seed](https://github.com/erdahuja/mergedup/blob/main/business/data/dbschema/sql/seed.sql)
 
 As a rule of thumb, import graphs are as follows app imports business imports foundation.
 
@@ -33,7 +33,7 @@ As a rule of thumb, import graphs are as follows app imports business imports fo
     foundation: building blocks of a web server (swap router without changing anything!)
 
 
-For RBAC mechanism, we are using jwt tokens with two roles (admin and user). By using a middleware for each handler we are doing authentication and authorization.
+For RBAC mechanism, we are using jwt tokens with two roles (admin and user) saved in claims. By using a middleware for each handler we are doing authentication and authorization.
 A cache layer is also added in users db to quick access user roles.
 
 [DB Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf) | [API design](https://github.com/erdahuja/mergedup/docs/api/mergedup.md)
@@ -45,7 +45,6 @@ For installing Go, please follow
 > A Makefile is also available to run basic commands. Please use the same. It is available in mac by default
 
 The command line versions can now be installed straight from the command line itself;
-
     Open "Terminal" (it is located in Applications/Utilities)
     In the terminal window, run the command xcode-select --install
     In the windows that pops up, click Install, and agree to the Terms of Service.
@@ -65,14 +64,16 @@ Two users will be seeded on running migration (already done if you want to skip 
     username: user1@example.com
     password: user1
 
-Please use [this api]() for getting bearer token. You have to use basic auth for access same api. (authorization header)
+Please use [api](https://github.com/erdahuja/mergedup/blob/main/docs/api/mergedup.md#end-point-get-token) for getting bearer token. You have to use basic auth to be able to generate token. (authorization header with username/password)
 
 Once you have the token you can use the same to try out different api. for users/admin apis will reject/accept as per role defined.
 
 To use cart:
 Create cart using cart api
-post cart item into cart using api
+post cart items into cart 
 remove item from cart
+
+The quantites will be altered
 
 ## API
 
@@ -101,3 +102,5 @@ Documentation:
 POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)
 We are using hosted db for same for which "dev.env" file is provided already.
 No db setup is required.
+
+[Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf)
