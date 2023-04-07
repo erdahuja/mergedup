@@ -78,22 +78,22 @@ Please download postman collection from [here](https://elements.getpostman.com/r
 
 | API  | Policy |
 | ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| Get token  | public  |
+| Create user | ruleAdmin  |
+| Get all users  | ruleAdmin  |
+| Get user by id | ruleAny  |
+| Suspend user  | ruleAdmin |
+| Create items  | ruleAdmin  |
+| Get items  | ruleAny  |
+| Create cart  |ruleUser  |
+| Add item to cart  | ruleUser |
+| View all items of cart  | ruleUser  |
+| Delete item from cart  | ruleUser  |
+| server status  | public  |
 
 Documentation:
 
-[API](https://github.com/erdahuja/mergedup/docs/api/mergedup.md)
+[API](https://github.com/erdahuja/mergedup/blob/main/docs/api/mergedup.md)
 
 ## DB Design
 POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)
