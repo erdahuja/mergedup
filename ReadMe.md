@@ -104,3 +104,6 @@ We are using hosted db for same for which "dev.env" file is provided already.
 No db setup is required.
 
 [Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf)
+
+## E2E tests
+We have used mockgen to mock database and tests can be found for business/core/item where quanities gets altered on add to cart and remove from cart.

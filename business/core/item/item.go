@@ -22,7 +22,7 @@ func NewCore(storer Storer) *Core {
 
 // QueryFilter holds the available fields a query can be filtered on.
 type QueryFilter struct {
-	Quantity *int `validate:"omitempty,uuid4"`
+	Quantity *int `validate:"omitempty,int"`
 }
 
 // ByID sets the ID field of the QueryFilter value.
@@ -36,14 +36,6 @@ func (f *QueryFilter) ByQuantity(q int) {
 // WithQuantity sets the Quantity field of the QueryFilter value.
 func (qf *QueryFilter) WithQuantity(quantity int) {
 	qf.Quantity = &quantity
-}
-
-type Storer interface {
-	WithinTran(ctx context.Context, fn func(s Storer) error) error
-	Create(ctx context.Context, itm Item) error
-	Query(ctx context.Context, filter QueryFilter) ([]Item, error)
-	QueryByID(ctx context.Context, itemID int64) (Item, error)
-	Update(ctx context.Context, itm Item) error
 }
 
 // Create adds a Item to the database. It returns the created Item with
