@@ -88,6 +88,16 @@
 				{
 					"name": "view users",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4OTEwNDAsImlhdCI6MTY4MDg4NzQ0MCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.zRptzPqhHKr0gXx8Er0KP7HKXzgqI2CtWLAEb6iEBro",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -190,19 +200,60 @@
 				{
 					"name": "create cart",
 					"request": {
-						"method": "GET",
-						"header": []
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODkwMzksImlhdCI6MTY4MDg4ODQzOSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.wlf0AwLJlBGsKOQNMlKu3aWE9VbdDsuTM05VeTqZUKQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v1/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"cart"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "create cart item",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODg2OTYsImlhdCI6MTY4MDg4NTA5Niwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.3WGDZS8fnj1ubjT54OSWPcYi51T4-Hci2Dy6wwJD0y0",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"cart_id\": 1,\n    \"item_id\": 2,\n    \"quantity\": 5\n}",
+							"raw": "{\n    \"cart_id\": 1,\n    \"item_id\": 1,\n    \"quantity\": 35\n}",
 							"options": {
 								"raw": {
 									"language": "json"

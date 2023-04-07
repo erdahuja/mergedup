@@ -57,6 +57,13 @@
 |Authorization|Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjIyMjUsImlhdCI6MTY4MDg1ODYyNSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.PV4JRkWmkQ-z3lyWL2LHV40Bglykokf3xyBGtk2hKs4|
 
 
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4OTEwNDAsImlhdCI6MTY4MDg4NzQ0MCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.zRptzPqhHKr0gXx8Er0KP7HKXzgqI2CtWLAEb6iEBro|string|
+
+
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
@@ -101,10 +108,25 @@
 
 
 ## End-point: create cart
-### Method: GET
+### Method: POST
 >```
->undefined
+>http://localhost:3000/v1/cart
 >```
+### Body (**raw**)
+
+```json
+{
+    "user_id": 1
+}
+```
+
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODkwMzksImlhdCI6MTY4MDg4ODQzOSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.wlf0AwLJlBGsKOQNMlKu3aWE9VbdDsuTM05VeTqZUKQ|string|
+
+
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
@@ -118,10 +140,17 @@
 ```json
 {
     "cart_id": 1,
-    "item_id": 2,
-    "quantity": 5
+    "item_id": 1,
+    "quantity": 35
 }
 ```
+
+### 🔑 Authentication bearer
+
+|Param|value|Type|
+|---|---|---|
+|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODg2OTYsImlhdCI6MTY4MDg4NTA5Niwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.3WGDZS8fnj1ubjT54OSWPcYi51T4-Hci2Dy6wwJD0y0|string|
+
 
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
