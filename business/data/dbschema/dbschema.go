@@ -65,7 +65,7 @@ func Seed(ctx context.Context, db *sqlx.DB) (err error) {
 			return
 		}
 	}()
-
+	
 	if _, err := tx.Exec(seedDoc); err != nil {
 		return fmt.Errorf("exec: %w", err)
 	}

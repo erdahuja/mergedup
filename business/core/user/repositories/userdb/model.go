@@ -6,16 +6,12 @@ import (
 
 	"mergedup/business/core/user"
 
-	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
 
-// =============================================================================
-
-// dbUser represent the structure we need for moving data
-// between the app and the database.
+// DTO between the app and the database.
 type dbUser struct {
-	ID           uuid.UUID      `db:"user_id"`
+	ID           int64          `db:"user_id"`
 	Name         string         `db:"name"`
 	Email        string         `db:"email"`
 	Roles        pq.StringArray `db:"roles"`

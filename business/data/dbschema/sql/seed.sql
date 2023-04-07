@@ -1,15 +1,16 @@
-INSERT INTO users (user_id, name, email, roles, password_hash, active, date_created, date_updated) VALUES
-	('5cf37266-3473-4006-984f-9325122678b7', 'Merge Admin', 'admin@example.com', '{ADMIN,USER}', '$2a$10$ys4MJEHOlZr9ADxOI1xZd.WYEtxTyaE3nDgYnfDKHL/Xa77LRxVVS', true, '2023-03-24 00:00:00', '2023-03-24 00:00:00'),
-	('45b5fbd3-755f-4379-8f07-a58d4a30fa2f', 'Merge User', 'user1@example.com', '{USER}', '$2a$10$taY5kVHtg9/jvtKWcs6Ud.f.t5VHIV.xselXCcPTCSDYtc5LIb682', true, '2023-03-24 00:00:00', '2023-03-24 00:00:00')
+INSERT INTO users (name, email, roles, password_hash, active, date_created, date_updated) VALUES
+	('Merge Admin', 'admin@example.com', '{ADMIN,USER}', '$2a$10$ys4MJEHOlZr9ADxOI1xZd.WYEtxTyaE3nDgYnfDKHL/Xa77LRxVVS', true, '2023-03-24 00:00:00', '2023-03-24 00:00:00'),
+	('Merge User1', 'user1@example.com', '{USER}', '$2a$10$P9QGaSITodQRPjyl8YKqQuMCA.1BFHDJhvYWmlGykfORoSJ24JYlK', true, '2023-03-24 00:00:00', '2023-03-24 00:00:00'),
+	('Merge User2', 'user2@example.com', '{USER}', '$2a$10$AryZGMnQ.Zxv7MowxYzYqus1mPawkDQGcPhA85t5H.A.6DM4gnxL6', true, '2023-03-24 00:00:00', '2023-03-24 00:00:00')
 	ON CONFLICT DO NOTHING;
 
-INSERT INTO items (item_id, user_id, name, cost, quantity, date_created, date_updated) VALUES
-	('a2b0639f-2cc6-44b8-b97b-15d69dbb511e', '45b5fbd3-755f-4379-8f07-a58d4a30fa2f', 'Comic Books', 50, 42, '2023-01-01 00:00:01.000001+00', '2023-01-01 00:00:01.000001+00'),
-	('72f8b983-3eb4-48db-9ed0-e45cc6bd716b', '45b5fbd3-755f-4379-8f07-a58d4a30fa2f', 'McDonalds Toys', 75, 120, '2023-01-01 00:00:02.000001+00', '2023-01-01 00:00:02.000001+00')
+INSERT INTO items (name, cost, quantity, date_created, date_updated) VALUES
+	('Comic Books', 50, 42, '2023-01-01 00:00:01.000001+00', '2023-01-01 00:00:01.000001+00'),
+	( 'McDonalds Toys', 75, 120, '2023-01-01 00:00:02.000001+00', '2023-01-01 00:00:02.000001+00')
 	ON CONFLICT DO NOTHING;
 
-INSERT INTO cart (cart_id, user_id, item_id, quantity, paid, date_created) VALUES
-	('98b6d4b8-f04b-4c79-8c2e-a0aef46854b7', '45b5fbd3-755f-4379-8f07-a58d4a30fa2f', 'a2b0639f-2cc6-44b8-b97b-15d69dbb511e', 2, 100, '2023-01-01 00:00:03.000001+00'),
-	('85f6fb09-eb05-4874-ae39-82d1a30fe0d7', '45b5fbd3-755f-4379-8f07-a58d4a30fa2f', 'a2b0639f-2cc6-44b8-b97b-15d69dbb511e', 5, 250, '2023-01-01 00:00:04.000001+00'),
-	('a235be9e-ab5d-44e6-a987-fa1c749264c7', '45b5fbd3-755f-4379-8f07-a58d4a30fa2f', '72f8b983-3eb4-48db-9ed0-e45cc6bd716b', 3, 225, '2023-01-01 00:00:05.000001+00')
+INSERT INTO cart (cart_id, user_id, item_id, quantity, date_created) VALUES
+	(1, 1, 1, 2,'2023-01-01 00:00:03.000001+00'),
+	(1, 1, 1, 5, '2023-01-01 00:00:04.000001+00'),
+	(2, 2, 2, 3, '2023-01-01 00:00:05.000001+00')
 	ON CONFLICT DO NOTHING;

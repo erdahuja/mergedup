@@ -12,7 +12,6 @@ import (
 
 	"mergedup/business/sys/validate"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -34,7 +33,7 @@ type Storer interface {
 	Update(ctx context.Context, usr User) error
 	Delete(ctx context.Context, usr User) error
 	Query(ctx context.Context, filter QueryFilter) ([]User, error)
-	QueryByID(ctx context.Context, userID uuid.UUID) (User, error)
+	QueryByID(ctx context.Context, userID int64) (User, error)
 	QueryByEmail(ctx context.Context, email mail.Address) (User, error)
 }
 
@@ -64,7 +63,6 @@ func (c *Core) Create(ctx context.Context, nu NewUser) (User, error) {
 	now := time.Now()
 
 	usr := User{
-		ID:           uuid.New(),
 		Name:         nu.Name,
 		Email:        nu.Email,
 		PasswordHash: hash,
@@ -146,7 +144,7 @@ func (c *Core) Query(ctx context.Context, filter QueryFilter) ([]User, error) {
 }
 
 // QueryByID gets the specified user from the database.
-func (c *Core) QueryByID(ctx context.Context, userID uuid.UUID) (User, error) {
+func (c *Core) QueryByID(ctx context.Context, userID int64) (User, error) {
 	user, err := c.storer.QueryByID(ctx, userID)
 	if err != nil {
 		return User{}, fmt.Errorf("query: %w", err)

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
+	"strconv"
 	"time"
 
 	"mergedup/business/auth"
@@ -53,17 +54,20 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 		return fmt.Errorf("unable to decode payload: %w", err)
 	}
 
-	userID, err := uuid.Parse(web.Param(r, "id"))
-	if err != nil {
+	userID := web.Param(r, "id")
+	if userID == "" {
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
 	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID.String() && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
+	if claims.Subject != userID && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
 		return auth.NewAuthError("auth failed")
 	}
-
-	usr, err := h.User.QueryByID(ctx, userID)
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
+	}
+	usr, err := h.User.QueryByID(ctx, int64(id))
 	if err != nil {
 		switch {
 		case errors.Is(err, user.ErrNotFound):
@@ -79,35 +83,6 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 	}
 
 	return web.Respond(ctx, w, usr, http.StatusOK)
-}
-
-// Delete removes a user from the system.
-func (h Handlers) Delete(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	userID, err := uuid.Parse(web.Param(r, "id"))
-	if err != nil {
-		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
-	}
-
-	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID.String() && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
-		return auth.NewAuthError("auth failed")
-	}
-
-	usr, err := h.User.QueryByID(ctx, userID)
-	if err != nil {
-		switch {
-		case errors.Is(err, user.ErrNotFound):
-			return web.Respond(ctx, w, nil, http.StatusNoContent)
-		default:
-			return fmt.Errorf("ID[%s]: %w", userID, err)
-		}
-	}
-
-	if err := h.User.Delete(ctx, usr); err != nil {
-		return fmt.Errorf("ID[%s]: %w", userID, err)
-	}
-
-	return web.Respond(ctx, w, nil, http.StatusNoContent)
 }
 
 // Query returns a list of users with paging.
@@ -128,17 +103,22 @@ func (h Handlers) Query(ctx context.Context, w http.ResponseWriter, r *http.Requ
 
 // QueryByID returns a user by its ID.
 func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	userID, err := uuid.Parse(web.Param(r, "id"))
-	if err != nil {
+	userID := web.Param(r, "id")
+	if userID == "" {
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
 	claims := auth.GetClaims(ctx)
-	if claims.Subject != userID.String() && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
+	if claims.Subject != userID && h.Auth.Authorize(ctx, claims, auth.RuleAdminOnly) != nil {
 		return auth.NewAuthError("auth failed")
 	}
 
-	usr, err := h.User.QueryByID(ctx, userID)
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
+	}
+
+	usr, err := h.User.QueryByID(ctx, int64(id))
 	if err != nil {
 		switch {
 		case errors.Is(err, user.ErrNotFound):
@@ -156,11 +136,11 @@ func (h Handlers) Status(ctx context.Context, w http.ResponseWriter, r *http.Req
 	return web.Respond(ctx, w, nil, http.StatusOK)
 }
 
-// Token provides an API token for the authenticated user.
+// Token provides an Bearer token for the authenticated user (basic auth) that has roles added in claims.
 func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	kid := web.Param(r, "kid")
-	if kid == "" {
-		return web.NewRequestError(errors.New("missing kid"), http.StatusBadRequest)
+	uid := web.Param(r, "id")
+	if uid == "" {
+		return web.NewRequestError(errors.New("missing id"), http.StatusBadRequest)
 	}
 
 	email, pass, ok := r.BasicAuth()
@@ -187,7 +167,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 
 	claims := auth.Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   usr.ID.String(),
+			Subject:   strconv.FormatInt(usr.ID, 10),
 			Issuer:    "mergedup",
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
@@ -198,7 +178,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 	var tkn struct {
 		Token string `json:"token"`
 	}
-	tkn.Token, err = h.Auth.GenerateToken(kid, claims)
+	tkn.Token, err = h.Auth.GenerateToken(uid, claims)
 	if err != nil {
 		return fmt.Errorf("generating token: %w", err)
 	}

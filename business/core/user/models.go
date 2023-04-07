@@ -3,13 +3,11 @@ package user
 import (
 	"net/mail"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // User represents an individual user in db
 type User struct {
-	ID           uuid.UUID    `json:"id"`
+	ID           int64   `json:"id"`
 	Name         string       `json:"name"`
 	Email        mail.Address `json:"email"`
 	Roles        []Role       `json:"roles"`

@@ -3,11 +3,11 @@ package usercache
 import (
 	"context"
 	"net/mail"
+	"strconv"
 	"sync"
 
 	"mergedup/business/core/user"
 
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -74,8 +74,8 @@ func (s *Store) Query(ctx context.Context, filter user.QueryFilter) ([]user.User
 }
 
 // QueryByID gets the specified user from the database.
-func (s *Store) QueryByID(ctx context.Context, userID uuid.UUID) (user.User, error) {
-	cachedUsr, ok := s.readCache(userID.String())
+func (s *Store) QueryByID(ctx context.Context, userID int64) (user.User, error) {
+	cachedUsr, ok := s.readCache(strconv.FormatInt(userID, 10))
 	if ok {
 		return cachedUsr, nil
 	}
@@ -127,7 +127,7 @@ func (s *Store) writeCache(usr user.User) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.cache[usr.ID.String()] = &usr
+	s.cache[strconv.FormatInt(usr.ID, 10)] = &usr
 	s.cache[usr.Email.Address] = &usr
 }
 
@@ -136,6 +136,6 @@ func (s *Store) deleteCache(usr user.User) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	delete(s.cache, usr.ID.String())
+	delete(s.cache, strconv.FormatInt(usr.ID, 10))
 	delete(s.cache, usr.Email.Address)
 }

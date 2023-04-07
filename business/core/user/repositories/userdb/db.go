@@ -6,13 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"net/mail"
+	"strconv"
 	"strings"
 
 	"mergedup/business/core/user"
 
 	database "mergedup/business/sys/database"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -97,7 +97,7 @@ func (s *Store) Delete(ctx context.Context, usr user.User) error {
 	data := struct {
 		UserID string `db:"user_id"`
 	}{
-		UserID: usr.ID.String(),
+		UserID: strconv.FormatInt(usr.ID, 10),
 	}
 
 	const q = `
@@ -107,7 +107,7 @@ func (s *Store) Delete(ctx context.Context, usr user.User) error {
 		user_id = :user_id`
 
 	if err := database.NamedExecContext(ctx, s.log, s.db, q, data); err != nil {
-		return fmt.Errorf("deleting userID[%s]: %w", usr.ID, err)
+		return fmt.Errorf("deleting userID[%d]: %w", usr.ID, err)
 	}
 
 	return nil
@@ -158,11 +158,11 @@ func (s *Store) Query(ctx context.Context, filter user.QueryFilter) ([]user.User
 }
 
 // QueryByID gets the specified user from the database.
-func (s *Store) QueryByID(ctx context.Context, userID uuid.UUID) (user.User, error) {
+func (s *Store) QueryByID(ctx context.Context, userID int64) (user.User, error) {
 	data := struct {
-		UserID string `db:"user_id"`
+		UserID int64 `db:"user_id"`
 	}{
-		UserID: userID.String(),
+		UserID: userID,
 	}
 
 	const q = `

@@ -1,7 +1,7 @@
 -- Version: 1.01
 -- Description: Create table users
 CREATE TABLE users (
-	user_id       UUID,
+	user_id       SERIAL,
 	name          TEXT,
 	email         TEXT UNIQUE,
 	roles         TEXT[],
@@ -16,11 +16,11 @@ CREATE TABLE users (
 -- Version: 1.02
 -- Description: Create table items
 CREATE TABLE items (
-	item_id   UUID,
+	item_id   SERIAL,
 	name         TEXT,
 	cost         INT,
 	quantity     INT,
-	user_id      UUID,
+	user_id      SERIAL,
 	date_created TIMESTAMP,
 	date_updated TIMESTAMP,
 
@@ -31,9 +31,9 @@ CREATE TABLE items (
 -- Version: 1.03
 -- Description: Create table cart
 CREATE TABLE cart (
-	cart_id      UUID,
-	user_id      UUID,
-	item_id   UUID,
+	cart_id      SERIAL,
+	user_id      SERIAL,
+	item_id   SERIAL,
 	quantity     INT,
 	paid         INT,
 	date_created TIMESTAMP,

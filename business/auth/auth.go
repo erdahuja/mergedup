@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"mergedup/business/core/user"
 	"mergedup/business/core/user/repositories/userdb"
+	"strconv"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -148,12 +148,12 @@ func (a *Auth) isUserEnabled(ctx context.Context, claims Claims) bool {
 		return true
 	}
 
-	userID, err := uuid.Parse(claims.Subject)
+	userID, err := strconv.Atoi(claims.Subject)
 	if err != nil {
 		return false
 	}
 
-	usr, err := a.user.QueryByID(ctx, userID)
+	usr, err := a.user.QueryByID(ctx, int64(userID))
 	if err != nil {
 		return false
 	}
