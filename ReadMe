@@ -16,3 +16,9 @@ Q. Build a Shopping cart API with following functionalities:
 Note: Candidates may use any coding language, though Golang would be preferable
 
 > Merge Money Ltd │7 Bell Yard, London WC2A 2JR │ Tel +44.203.442.0175│Registration Number: 13463502
+
+
+step 1 get bearer token using user id password (admin@example.com/admin)
+step 2 create users using bearer token
+step 3 each user can do step 1 to use token
+step 4 try out APIs
