@@ -1,3 +1,4 @@
 DELETE FROM cart;
 DELETE FROM items;
 DELETE FROM users;
+DELETE FROM cart_items;

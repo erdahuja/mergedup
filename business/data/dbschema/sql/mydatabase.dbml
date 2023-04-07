@@ -1,0 +1,45 @@
+Table "users" {
+  "id" SERIAL [pk, increment]
+  "name" TEXT
+  "email" TEXT [unique]
+  "roles" "TEXT[]"
+  "password_hash" TEXT
+  "active" BOOLEAN
+  "date_created" timestamp
+  "date_updated" timestamp
+}
+
+Table "items" {
+  "id" SERIAL [pk, increment]
+  "name" TEXT
+  "cost" INT
+  "quantity" INT
+  "date_created" timestamp
+  "date_updated" timestamp
+}
+
+Table "cart" {
+  "id" SERIAL [pk, increment]
+  "user_id" INT
+  "date_created" timestamp
+  "date_updated" timestamp
+}
+
+Table "cart_items" {
+  "id" SERIAL [pk, increment]
+  "cart_id" INT
+  "item_id" INT
+  "quantity" INT
+  "date_created" timestamp
+  "date_updated" timestamp
+
+Indexes {
+  (cart_id, item_id) [name: "cart_item_idx"]
+}
+}
+
+Ref:"users"."id" < "cart"."user_id" [delete: cascade]
+
+Ref:"cart"."id" < "cart_items"."cart_id" [delete: cascade]
+
+Ref:"items"."id" < "cart_items"."item_id" [delete: cascade]

@@ -3,8 +3,8 @@
 CREATE TABLE users (
   id SERIAL, 
   name TEXT, 
-  email TEXT UNIQUE, 
-  roles TEXT[], 
+  email TEXT UNIQUE,
+  roles TEXT[],
   password_hash TEXT, 
   active BOOLEAN, 
   date_created TIMESTAMP, 
@@ -19,11 +19,9 @@ CREATE TABLE items (
   name TEXT, 
   cost INT, 
   quantity INT, 
-  user_id SERIAL, 
   date_created TIMESTAMP, 
   date_updated TIMESTAMP, 
-  PRIMARY KEY (id), 
-  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+  PRIMARY KEY (id)
 );
 
 -- Version: 1.03
@@ -33,7 +31,8 @@ CREATE TABLE cart (
   user_id INT, 
   date_created TIMESTAMP, 
   date_updated TIMESTAMP, 
-  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE, 
+  PRIMARY KEY(id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
 
 -- Version: 1.04
@@ -49,3 +48,8 @@ CREATE TABLE cart_items (
   FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE, 
   FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 );
+
+
+-- Version: 1.05
+-- Description: composite index cart_items
+CREATE INDEX cart_item_idx ON cart_items (cart_id, item_id);

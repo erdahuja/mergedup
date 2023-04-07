@@ -16,9 +16,50 @@ Q. Build a Shopping cart API with following functionalities:
 Note: Candidates may use any coding language, though Golang would be preferable
 
 > Merge Money Ltd │7 Bell Yard, London WC2A 2JR │ Tel +44.203.442.0175│Registration Number: 13463502
+# Description
+
+The project has app which exposes two http handlers:
+1. APP API
+    it contains the cart API (v1). It is divided into three groups for users, cart and items management. each group has it's own dependency system so that this can be broken down to microservices in the future.
+2. Debug API
+    it contains pprof, liveness, readiness probes as well Go's debug tooling
+
+As a rule of thumb, import graphs are as follows app -> business -> foundation.
+app: http handlers (can be swapped with socket, rpc easily)
+business: core business logic, data and RBAC system
+foundation: building blocks of a web server (swap router without changing anything!)
+
+Two users will be seeded on running migration (already done if you want to skip the step)
+username: admin@example.com
+password: admin
 
 
-step 1 get bearer token using user id password (admin@example.com/admin)
-step 2 create users using bearer token
-step 3 each user can do step 1 to use token
-step 4 try out APIs
+[DB Design](https://github.com/erdahuja/mergedup/docs/db) | [API design](https://github.com/erdahuja/mergedup/docs/api)
+
+## Getting started
+For installing Go, please follow
+[go official guide](https://go.dev/doc/install)
+
+However a binary is also provided (for mac system) in the root of the project.
+to run "./mergedup" after compiling as per your target system
+
+> A Makefile is also available to run basic commands. Please use the same. It is available in mac by default
+
+The command line versions can now be installed straight from the command line itself;
+
+Open "Terminal" (it is located in Applications/Utilities)
+In the terminal window, run the command xcode-select --install
+In the windows that pops up, click Install, and agree to the Terms of Service.
+
+> Note please use "make db" command before starting the app, it hard resets the db and run migrations while seeding the data
+
+## Overview
+
+For RBAC mechanism, we are using jwt tokens with two roles (admin and user). By using a middleware we are doing authentication and authorization.
+
+## API
+
+Please download postman collection from [here]()
+## DB Design
+POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)
+We are using hosted db for same for which "dev.env" file is provided already. No db setup is required
