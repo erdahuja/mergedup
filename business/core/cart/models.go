@@ -14,5 +14,5 @@ type Cart struct {
 
 // NewUser contains information needed to create a new User.
 type NewCart struct {
-	UserID int64 `json:"name" validate:"required"`
+	UserID int64 `json:"user_id" validate:"required"`
 }

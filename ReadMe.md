@@ -52,7 +52,9 @@ The command line versions can now be installed straight from the command line it
 
 ## Commands
 `make db`: db can be reset using 
+
 `make run`: project can be run using 
+
 `make status-debug`/`make status-api`: server status can be checked running or not
 
 ## First Step
