@@ -74,8 +74,8 @@ func (s *Store) Query(ctx context.Context) ([]user.User, error) {
 }
 
 // QueryByID gets the specified user from the database.
-func (s *Store) QueryByID(ctx context.Context, userID int64) (user.User, error) {
-	cachedUsr, ok := s.readCache(strconv.FormatInt(userID, 10))
+func (s *Store) QueryByID(ctx context.Context, userID int) (user.User, error) {
+	cachedUsr, ok := s.readCache(strconv.FormatInt(int64(userID), 10))
 	if ok {
 		return cachedUsr, nil
 	}

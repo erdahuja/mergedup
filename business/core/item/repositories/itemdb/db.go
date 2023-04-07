@@ -54,7 +54,7 @@ func (s *Store) Query(ctx context.Context, filter item.QueryFilter) ([]item.Item
 	s.applyFilter(filter, buf)
 
 	var dbItms []dbItem
-	if err := database.NamedQuerySlice(ctx, s.log, s.db, buf.String(), nil, &dbItms); err != nil {
+	if err := database.NamedQuerySlice(ctx, s.log, s.db, buf.String(), struct{}{}, &dbItms); err != nil {
 		return nil, fmt.Errorf("namedqueryslice: %w", err)
 	}
 

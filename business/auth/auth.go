@@ -100,6 +100,7 @@ func (a *Auth) Authenticate(ctx context.Context, bearerToken string) (Claims, er
 	})
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
+		a.log.Infof("roles: %v, subject: %s", claims.Roles, claims.Subject)
 		// Check the database for this user to verify they are still enabled.
 		if !a.isUserEnabled(ctx, *claims) {
 			return Claims{}, fmt.Errorf("user not enabled : %w", err)
@@ -153,7 +154,7 @@ func (a *Auth) isUserEnabled(ctx context.Context, claims Claims) bool {
 		return false
 	}
 
-	usr, err := a.user.QueryByID(ctx, int64(userID))
+	usr, err := a.user.QueryByID(ctx, userID)
 	if err != nil {
 		return false
 	}

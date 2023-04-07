@@ -8,7 +8,7 @@ import (
 
 // dbItem represents an individual item.
 type dbItem struct {
-	ID          int64     `db:"product_id"`   // Unique identifier.
+	ID          int64     `db:"id"`           // Unique identifier.
 	Name        string    `db:"name"`         // Display name of the item.
 	Cost        int       `db:"cost"`         // Price for one item in cents.
 	Quantity    int       `db:"quantity"`     // Original number of items available.

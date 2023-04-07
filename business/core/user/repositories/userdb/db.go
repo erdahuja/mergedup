@@ -120,9 +120,9 @@ func (s *Store) Query(ctx context.Context) ([]user.User, error) {
 	FROM
 		users
 	`
-	
+
 	var usrs []dbUser
-	if err := database.NamedQuerySlice(ctx, s.log, s.db, q, nil, &usrs); err != nil {
+	if err := database.NamedQuerySlice(ctx, s.log, s.db, q, struct{}{}, &usrs); err != nil {
 		return nil, fmt.Errorf("selecting users: %w", err)
 	}
 
@@ -130,11 +130,11 @@ func (s *Store) Query(ctx context.Context) ([]user.User, error) {
 }
 
 // QueryByID gets the specified user from the database.
-func (s *Store) QueryByID(ctx context.Context, userID int64) (user.User, error) {
+func (s *Store) QueryByID(ctx context.Context, id int) (user.User, error) {
 	data := struct {
-		UserID int64 `db:"user_id"`
+		ID int `db:"id"`
 	}{
-		UserID: userID,
+		ID: id,
 	}
 
 	const q = `
@@ -143,14 +143,14 @@ func (s *Store) QueryByID(ctx context.Context, userID int64) (user.User, error) 
 	FROM
 		users
 	WHERE
-		user_id = :user_id`
+		id = :id`
 
 	var usr dbUser
 	if err := database.NamedQueryStruct(ctx, s.log, s.db, q, data, &usr); err != nil {
 		if errors.Is(err, database.ErrDBNotFound) {
 			return user.User{}, user.ErrNotFound
 		}
-		return user.User{}, fmt.Errorf("selecting userID[%q]: %w", userID, err)
+		return user.User{}, fmt.Errorf("selecting userID[%q]: %w", id, err)
 	}
 
 	return toCoreUser(usr), nil

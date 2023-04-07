@@ -7,10 +7,10 @@ import (
 
 // Cart represents an individual cart row.
 type dbCart struct {
-	ID          int64
-	UserID      int64
-	DateCreated time.Time
-	DateUpdated time.Time
+	ID          int64     `db:"id"`
+	UserID      int64     `db:"user_id"`
+	DateCreated time.Time `db:"date_created"`
+	DateUpdated time.Time `db:"date_updated"`
 }
 
 // NewCart is what we require from clients when adding a Item.

@@ -23,16 +23,18 @@ The project has app which exposes two http handlers:
     it contains the cart API (v1). It is divided into three groups for users, cart and items management. each group has it's own dependency system so that this can be broken down to microservices in the future.
 2. Debug API
     it contains pprof, liveness, readiness probes as well Go's debug tooling
+3. Scratch
+    it contains bootstrap code like migration and seed scripts. It can be viewer [schema](), [seed]()
 
-As a rule of thumb, import graphs are as follows app -> business -> foundation.
-app: http handlers (can be swapped with socket, rpc easily)
-business: core business logic, data and RBAC system
-foundation: building blocks of a web server (swap router without changing anything!)
+As a rule of thumb, import graphs are as follows app imports business imports foundation.
 
-Two users will be seeded on running migration (already done if you want to skip the step)
-username: admin@example.com
-password: admin
+    app: http handlers (can be swapped with socket, rpc easily)
+    business: core business logic, data and RBAC system
+    foundation: building blocks of a web server (swap router without changing anything!)
 
+
+For RBAC mechanism, we are using jwt tokens with two roles (admin and user). By using a middleware for each handler we are doing authentication and authorization.
+A cache layer is also added in users db to quick access user roles.
 
 [DB Design](https://github.com/erdahuja/mergedup/docs/db) | [API design](https://github.com/erdahuja/mergedup/docs/api)
 
@@ -40,26 +42,36 @@ password: admin
 For installing Go, please follow
 [go official guide](https://go.dev/doc/install)
 
-However a binary is also provided (for mac system) in the root of the project.
-to run "./mergedup" after compiling as per your target system
-
 > A Makefile is also available to run basic commands. Please use the same. It is available in mac by default
 
 The command line versions can now be installed straight from the command line itself;
 
-Open "Terminal" (it is located in Applications/Utilities)
-In the terminal window, run the command xcode-select --install
-In the windows that pops up, click Install, and agree to the Terms of Service.
+    Open "Terminal" (it is located in Applications/Utilities)
+    In the terminal window, run the command xcode-select --install
+    In the windows that pops up, click Install, and agree to the Terms of Service.
 
-> Note please use "make db" command before starting the app, it hard resets the db and run migrations while seeding the data
+## Commands
+"make db": db can be reset using 
+"make run": project can be run using 
+"make status-debug"/"make status-api" : server status can be checked running or not
 
-## Overview
+## First Step
+Two users will be seeded on running migration (already done if you want to skip the step)
+    username: admin@example.com
+    password: admin
 
-For RBAC mechanism, we are using jwt tokens with two roles (admin and user). By using a middleware we are doing authentication and authorization.
+    username: user1@example.com
+    password: user1
+
+Please use [this api]() for getting bearer token. You have to use basic auth for access same api. (authorization header)
+
+Once you have the token you can use the same to try out different api. for users/admin api will reject/accept as per role requirements.
 
 ## API
 
 Please download postman collection from [here]()
+
 ## DB Design
 POSTGres db is used as the problem was of SQL type. however further scale we can add no sql/ cache server to specific problems (parts of app)
-We are using hosted db for same for which "dev.env" file is provided already. No db setup is required
+We are using hosted db for same for which "dev.env" file is provided already.
+No db setup is required.

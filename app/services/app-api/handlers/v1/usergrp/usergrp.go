@@ -63,7 +63,7 @@ func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Req
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
-	usr, err := h.User.QueryByID(ctx, int64(id))
+	usr, err := h.User.QueryByID(ctx, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, user.ErrNotFound):
@@ -104,7 +104,7 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
-	usr, err := h.User.QueryByID(ctx, int64(id))
+	usr, err := h.User.QueryByID(ctx, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, user.ErrNotFound):

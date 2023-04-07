@@ -32,8 +32,8 @@ type Storer interface {
 	Create(ctx context.Context, usr User) error
 	Update(ctx context.Context, usr User) error
 	Delete(ctx context.Context, usr User) error
-	Query(ctx context.Context) ([]User, error)// ideally it should have pagination
-	QueryByID(ctx context.Context, userID int64) (User, error)
+	Query(ctx context.Context) ([]User, error) // ideally it should have pagination
+	QueryByID(ctx context.Context, userID int) (User, error)
 	QueryByEmail(ctx context.Context, email mail.Address) (User, error)
 }
 
@@ -141,7 +141,7 @@ func (c *Core) Query(ctx context.Context) ([]User, error) {
 }
 
 // QueryByID gets the specified user from the database.
-func (c *Core) QueryByID(ctx context.Context, userID int64) (User, error) {
+func (c *Core) QueryByID(ctx context.Context, userID int) (User, error) {
 	user, err := c.storer.QueryByID(ctx, userID)
 	if err != nil {
 		return User{}, fmt.Errorf("query: %w", err)
