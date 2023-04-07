@@ -2,6 +2,7 @@ package cartdb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"mergedup/business/core/cart"
 	"mergedup/business/sys/database"
@@ -57,4 +58,31 @@ func (s *Store) Create(ctx context.Context, cart cart.Cart) error {
 	}
 
 	return nil
+}
+
+// QueryByID gets the specified user from the database.
+func (s *Store) QueryByID(ctx context.Context, cartID int64) (cart.Cart, error) {
+	data := struct {
+		CartID int64 `db:"id"`
+	}{
+		CartID: cartID,
+	}
+
+	const q = `
+	SELECT
+		*
+	FROM
+		cart
+	WHERE
+		id = :id`
+
+	var usr dbCart
+	if err := database.NamedQueryStruct(ctx, s.log, s.db, q, data, &usr); err != nil {
+		if errors.Is(err, database.ErrDBNotFound) {
+			return cart.Cart{}, cart.ErrNotFound
+		}
+		return cart.Cart{}, fmt.Errorf("selecting userID[%q]: %w", cartID, err)
+	}
+
+	return toCoreCart(usr), nil
 }

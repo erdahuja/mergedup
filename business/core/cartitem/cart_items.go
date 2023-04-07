@@ -22,7 +22,7 @@ type Storer interface {
 	WithinTran(ctx context.Context, fn func(s Storer) error) error
 	Create(ctx context.Context, itm CartItem) error
 	Delete(ctx context.Context, itm CartItem) error
-	QueryByCartID(ctx context.Context, cartID int) (CartItem, error)
+	QueryByCartID(ctx context.Context, cartID int) ([]CartItem, error)
 }
 
 // Create adds a Item to the database. It returns the created Item with
@@ -52,13 +52,13 @@ func (c *Core) Create(ctx context.Context, np NewCartItem) (CartItem, error) {
 }
 
 // QueryByCartID gets the specified cart items from the database.
-func (c *Core) QueryByCartID(ctx context.Context, cartID int) (CartItem, error) {
-	cart, err := c.storer.QueryByCartID(ctx, cartID)
+func (c *Core) QueryByCartID(ctx context.Context, cartID int) ([]CartItem, error) {
+	cartItems, err := c.storer.QueryByCartID(ctx, cartID)
 	if err != nil {
-		return CartItem{}, fmt.Errorf("query: %w", err)
+		return []CartItem{}, fmt.Errorf("query: %w", err)
 	}
 
-	return cart, nil
+	return cartItems, nil
 }
 
 // Delete gets the specified cart items from the database.

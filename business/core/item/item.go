@@ -3,10 +3,13 @@ package item
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"mergedup/business/sys/validate"
 	"time"
 )
+
+var ErrNotFound = errors.New("user not found")
 
 // Core manages the set of APIs for item access.
 type Core struct {
@@ -74,7 +77,7 @@ func (c *Core) Query(ctx context.Context, filter QueryFilter) ([]Item, error) {
 	return prds, nil
 }
 
-// QueryByID gets the specified user from the database.
+// QueryByID gets the specified item from the database.
 func (c *Core) QueryByID(ctx context.Context, itemID int64) (Item, error) {
 	item, err := c.storer.QueryByID(ctx, itemID)
 	if err != nil {

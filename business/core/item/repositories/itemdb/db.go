@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"mergedup/business/core/item"
-	"mergedup/business/core/user"
 	"mergedup/business/sys/database"
 	"strings"
 
@@ -66,10 +65,10 @@ func (s *Store) Update(ctx context.Context, itm item.Item) error {
 	UPDATE
 		items
 	SET
-		"quantity" = :quantity
+		"quantity" = :quantity,
 		"date_updated" = :date_updated
 	WHERE
-		item_id = :item_id`
+		id = :id`
 
 	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBItem(itm)); err != nil {
 		return fmt.Errorf("updating userID[%d]: %w", itm.ID, err)
@@ -110,7 +109,7 @@ func (s *Store) QueryByID(ctx context.Context, itemID int64) (item.Item, error) 
 	var usr dbItem
 	if err := database.NamedQueryStruct(ctx, s.log, s.db, q, data, &usr); err != nil {
 		if errors.Is(err, database.ErrDBNotFound) {
-			return item.Item{}, user.ErrNotFound
+			return item.Item{}, item.ErrNotFound
 		}
 		return item.Item{}, fmt.Errorf("selecting userID[%q]: %w", itemID, err)
 	}

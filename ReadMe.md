@@ -45,9 +45,10 @@ For installing Go, please follow
 > A Makefile is also available to run basic commands. Please use the same. It is available in mac by default
 
 The command line versions can now be installed straight from the command line itself;
-    Open "Terminal" (it is located in Applications/Utilities)
-    In the terminal window, run the command xcode-select --install
-    In the windows that pops up, click Install, and agree to the Terms of Service.
+
+    1. Open "Terminal" (it is located in Applications/Utilities)
+    2. In the terminal window, run the command xcode-select --install
+    3. In the windows that pops up, click Install, and agree to the Terms of Service.
 
 ## Commands
 `make db`: db can be reset using 
@@ -116,5 +117,7 @@ DB_HOST=tiny.db.elephantsql.com
 
 [Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf)
 
-## E2E tests
+## E2E tests - WIP
 We have used mockgen to mock database and tests can be found for business/core/item where quanities gets altered on add to cart and remove from cart.
+
+I will add tests (unit or otherwise) on further discussions only. 

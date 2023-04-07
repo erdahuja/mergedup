@@ -32,9 +32,9 @@ func NewStore(log *zap.SugaredLogger, db *sqlx.DB) *Store {
 func (s *Store) Create(ctx context.Context, item cartitem.CartItem) error {
 	const q = `
 	INSERT INTO cart_items
-		(user_id, name, cost, quantity, date_created, date_updated)
+		(cart_id, item_id, quantity, date_created, date_updated)
 	VALUES
-		(:user_id, :name, :cost, :quantity, :date_created, :date_updated)`
+		(:cart_id, :item_id, :quantity, :date_created, :date_updated)`
 
 	if err := database.NamedExecContext(ctx, s.log, s.db, q, toDBItem(item)); err != nil {
 		return fmt.Errorf("namedexeccontext: %w", err)
@@ -44,7 +44,7 @@ func (s *Store) Create(ctx context.Context, item cartitem.CartItem) error {
 }
 
 // QueryByID gets the specified user from the database.
-func (s *Store) QueryByCartID(ctx context.Context, cartID int) (cartitem.CartItem, error) {
+func (s *Store) QueryByCartID(ctx context.Context, cartID int) ([]cartitem.CartItem, error) {
 	data := struct {
 		CartID int `db:"cart_id"`
 	}{
@@ -59,15 +59,15 @@ func (s *Store) QueryByCartID(ctx context.Context, cartID int) (cartitem.CartIte
 	WHERE
 		cart_id = :cart_id`
 
-	var ci dbCartItem
-	if err := database.NamedQueryStruct(ctx, s.log, s.db, q, data, &ci); err != nil {
+	var ci []dbCartItem
+	if err := database.NamedQuerySlice(ctx, s.log, s.db, q, data, &ci); err != nil {
 		if errors.Is(err, database.ErrDBNotFound) {
-			return cartitem.CartItem{}, err
+			return []cartitem.CartItem{}, err
 		}
-		return cartitem.CartItem{}, fmt.Errorf("selecting cartID[%q]: %w", cartID, err)
+		return []cartitem.CartItem{}, fmt.Errorf("selecting cartID[%q]: %w", cartID, err)
 	}
 
-	return toCoreItem(ci), nil
+	return toCoreItemSlice(ci), nil
 }
 
 // Delete removes a user from the database.

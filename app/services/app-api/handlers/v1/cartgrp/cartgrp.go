@@ -12,6 +12,7 @@ import (
 	"mergedup/business/core/cartitem"
 	"mergedup/business/core/item"
 	"mergedup/business/core/user"
+	"mergedup/foundation/validate"
 	"mergedup/foundation/web"
 )
 
@@ -50,6 +51,11 @@ func (h Handlers) CreateCartItem(ctx context.Context, w http.ResponseWriter, r *
 		return fmt.Errorf("unable to decode payload: %w", err)
 	}
 
+	crt, err := h.Cart.QueryByID(ctx, nu.CartID)
+	if err != nil {
+		return web.NewRequestError(errors.New("unable to find itm:"+err.Error()), http.StatusNotFound)
+	}
+
 	itm, err := h.Item.QueryByID(ctx, nu.ItemID)
 	if err != nil {
 		return web.NewRequestError(errors.New("unable to find itm:"+err.Error()), http.StatusNotFound)
@@ -66,13 +72,13 @@ func (h Handlers) CreateCartItem(ctx context.Context, w http.ResponseWriter, r *
 		return fmt.Errorf("unable to update itm: %w", err)
 	}
 
-	crt, err := h.CartItem.Create(ctx, nu)
+	crti, err := h.CartItem.Create(ctx, nu)
 	if err != nil {
 		// TODO - revert quantity of items
 		return fmt.Errorf("user[%+v]: %w", &crt, err)
 	}
 
-	return web.Respond(ctx, w, crt, http.StatusCreated)
+	return web.Respond(ctx, w, crti, http.StatusCreated)
 }
 
 // QueryByID returns a user by its ID.
@@ -87,7 +93,15 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
 	}
 
-	usr, err := h.CartItem.QueryByCartID(ctx, id)
+	crt, err := h.Cart.QueryByID(ctx, int64(id))
+	if err != nil {
+		return web.NewRequestError(ErrInvalidID, http.StatusBadRequest)
+	}
+	claims := auth.GetClaims(ctx)
+	if strconv.Itoa(int(crt.UserID)) != claims.Subject {
+		return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
+	}
+	crtItems, err := h.CartItem.QueryByCartID(ctx, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, user.ErrNotFound):
@@ -97,10 +111,10 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 		}
 	}
 
-	return web.Respond(ctx, w, usr, http.StatusOK)
+	return web.Respond(ctx, w, crtItems, http.StatusOK)
 }
 
-// CreateCartItem adds a new item to the cart.
+// CreateCartItem deleted a new item to the cart.
 func (h Handlers) DeleteItem(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	var nu cartitem.DeleteCartItem
 	if err := web.Decode(r, &nu); err != nil {
@@ -112,19 +126,31 @@ func (h Handlers) DeleteItem(ctx context.Context, w http.ResponseWriter, r *http
 		return web.NewRequestError(errors.New("unable to find itm:"+err.Error()), http.StatusNotFound)
 	}
 
-	c_itm, err := h.CartItem.QueryByCartID(ctx, int(nu.CartID))
+	c_itms, err := h.CartItem.QueryByCartID(ctx, int(nu.CartID))
 	if err != nil {
 		// TODO - revert quantity of items
 		return fmt.Errorf("user[%+v]: %w", &itm, err)
 	}
 
-	err = h.CartItem.Delete(ctx, c_itm)
+	var targetCartItem cartitem.CartItem
+	for _, itm := range c_itms {
+		if itm.ItemID == nu.ItemID {
+			targetCartItem = itm
+			break
+		}
+	}
+
+	if targetCartItem.ID == 0 {
+		return validate.NewRequestError(ErrInvalidID, http.StatusBadRequest)
+	}
+
+	err = h.CartItem.Delete(ctx, targetCartItem)
 	if err != nil {
 		return fmt.Errorf("user[%+v]: %w", &itm, err)
 	}
 
 	oq := itm.Quantity
-	uq := c_itm.Quantity + oq
+	uq := targetCartItem.Quantity + oq
 	if _, err := h.Item.Update(ctx, itm, item.UpdateItem{
 		Quantity: &uq,
 	}); err != nil {

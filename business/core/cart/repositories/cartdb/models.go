@@ -27,3 +27,14 @@ func toDBCart(cart cart.Cart) dbCart {
 
 	return prdDB
 }
+
+func toCoreCart(db dbCart) cart.Cart {
+	prdDB := cart.Cart{
+		ID:          db.ID,
+		UserID:      db.UserID,
+		DateCreated: db.DateCreated.UTC(),
+		DateUpdated: db.DateUpdated.UTC(),
+	}
+
+	return prdDB
+}
