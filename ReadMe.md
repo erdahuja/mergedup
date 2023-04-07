@@ -36,7 +36,7 @@ As a rule of thumb, import graphs are as follows app imports business imports fo
 For RBAC mechanism, we are using jwt tokens with two roles (admin and user). By using a middleware for each handler we are doing authentication and authorization.
 A cache layer is also added in users db to quick access user roles.
 
-[DB Design](https://github.com/erdahuja/mergedup/docs/db) | [API design](https://github.com/erdahuja/mergedup/docs/api)
+[DB Design](https://github.com/erdahuja/mergedup/blob/main/docs/db/dbb_design.pdf) | [API design](https://github.com/erdahuja/mergedup/docs/api/mergedup.md)
 
 ## Getting started
 For installing Go, please follow
