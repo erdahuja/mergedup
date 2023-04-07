@@ -156,7 +156,7 @@ func (h Handlers) Token(ctx context.Context, w http.ResponseWriter, r *http.Requ
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   uid,
 			Issuer:    "mergedup",
-			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Minute * 10)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
 		Roles: usr.Roles,
