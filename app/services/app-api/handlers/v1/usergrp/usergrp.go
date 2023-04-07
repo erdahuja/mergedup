@@ -99,7 +99,7 @@ func (h Handlers) QueryByID(ctx context.Context, w http.ResponseWriter, r *http.
 	}
 
 	claims := auth.GetClaims(ctx)
-	if !h.Auth.IsAdmin(claims.Roles, auth.RuleAdminOnly) {
+	if !h.Auth.IsAdmin(claims.Roles) {
 		if claims.Subject != userID {
 			return web.NewRequestError(auth.ErrForbidden, http.StatusForbidden)
 		}

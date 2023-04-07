@@ -92,22 +92,24 @@ func (a *Auth) Authenticate(ctx context.Context, bearerToken string) (Claims, er
 // otherwise the user is authorized.
 func (a *Auth) Authorize(ctx context.Context, claims Claims, rule string) error {
 
-	if ok := a.IsAny(claims.Roles, rule); ok {
-		return nil
-	}
-
-	if ok := a.IsAdmin(claims.Roles, rule); ok {
-		return nil
-	}
-
-	if ok := a.IsUser(claims.Roles, rule); ok {
-		return nil
+	if rule == RuleAdminOnly {
+		if ok := a.IsAdmin(claims.Roles); ok {
+			return nil
+		}
+	} else if rule == RuleUserOnly {
+		if ok := a.IsUser(claims.Roles); ok {
+			return nil
+		}
+	} else if rule == RuleAny {
+		if ok := a.IsAny(claims.Roles); ok {
+			return nil
+		}
 	}
 
 	return ErrForbidden
 }
 
-func (a *Auth) IsAdmin(roles []user.Role, rule string) bool {
+func (a *Auth) IsAdmin(roles []user.Role) bool {
 	for _, role := range roles {
 		if role == user.RoleAdmin {
 			return true
@@ -116,7 +118,7 @@ func (a *Auth) IsAdmin(roles []user.Role, rule string) bool {
 	return false
 }
 
-func (a *Auth) IsUser(roles []user.Role, rule string) bool {
+func (a *Auth) IsUser(roles []user.Role) bool {
 	for _, role := range roles {
 		if role == user.RoleUser {
 			return true
@@ -125,7 +127,7 @@ func (a *Auth) IsUser(roles []user.Role, rule string) bool {
 	return false
 }
 
-func (a *Auth) IsAny(roles []user.Role, rule string) bool {
+func (a *Auth) IsAny(roles []user.Role) bool {
 	for _, role := range roles {
 		if role == user.RoleAdmin || role == user.RoleUser {
 			return true
