@@ -11,23 +11,21 @@
 
 ```json
 {
-    "name": "deepak",
-    "email": {
-        "address": "deepak@example.com",
-        "name": "deepak"
-    },
+    "name": "rishabh",
+    "email": "rishabh@example.com",
     "roles": [
-        "user"
+        "USER"
     ],
-    "password": "deepak",
-    "passwordConfirm": "deepak"
+    "password": "rishabh",
+    "passwordConfirm": "rishabh"
 }
 ```
 
-### 🔑 Authentication basic
+### 🔑 Authentication bearer
 
 |Param|value|Type|
 |---|---|---|
+|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODY2MjEsImlhdCI6MTY4MDg4MzAyMSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.wqUWPldniYveFk8hdjETi99fAxHnrYdUGnOMt0yj3uw|string|
 
 
 
@@ -65,7 +63,7 @@
 ## End-point: suspend
 ### Method: PATCH
 >```
->http://localhost:3000/v1/users/2
+>http://localhost:3000/v1/users/3
 >```
 ### Body (**raw**)
 
@@ -79,7 +77,7 @@
 
 |Param|value|Type|
 |---|---|---|
-|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjM4MTAsImlhdCI6MTY4MDg2MDIxMCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.AGRscERM3QHYJRAsOZDCgg5Ayw8UGLtE_00ZvlJIsIc|string|
+|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODY2MjEsImlhdCI6MTY4MDg4MzAyMSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.wqUWPldniYveFk8hdjETi99fAxHnrYdUGnOMt0yj3uw|string|
 
 
 
@@ -94,7 +92,7 @@
 
 |Param|value|Type|
 |---|---|---|
-|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjM4MTAsImlhdCI6MTY4MDg2MDIxMCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.AGRscERM3QHYJRAsOZDCgg5Ayw8UGLtE_00ZvlJIsIc|string|
+|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODgyOTYsImlhdCI6MTY4MDg4NDY5Niwicm9sZXMiOlsiVVNFUiJdfQ.Naa9QYvRnAqajZ62BGN2m7AozpI3n2NQdtX0RlTqYLk|string|
 
 
 

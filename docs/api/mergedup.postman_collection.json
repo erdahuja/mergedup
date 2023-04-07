@@ -13,16 +13,11 @@
 					"name": "create user",
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "password",
-									"value": "admin",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "admin@example.com",
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODY2MjEsImlhdCI6MTY4MDg4MzAyMSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.wqUWPldniYveFk8hdjETi99fAxHnrYdUGnOMt0yj3uw",
 									"type": "string"
 								}
 							]
@@ -31,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"deepak\",\n    \"email\": {\n        \"address\": \"deepak@example.com\",\n        \"name\": \"deepak\"\n    },\n    \"roles\": [\n        \"user\"\n    ],\n    \"password\": \"deepak\",\n    \"passwordConfirm\": \"deepak\"\n}",
+							"raw": "{\n    \"name\": \"rishabh\",\n    \"email\": \"rishabh@example.com\",\n    \"roles\": [\n        \"USER\"\n    ],\n    \"password\": \"rishabh\",\n    \"passwordConfirm\": \"rishabh\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,7 +119,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjM4MTAsImlhdCI6MTY4MDg2MDIxMCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.AGRscERM3QHYJRAsOZDCgg5Ayw8UGLtE_00ZvlJIsIc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODY2MjEsImlhdCI6MTY4MDg4MzAyMSwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.wqUWPldniYveFk8hdjETi99fAxHnrYdUGnOMt0yj3uw",
 									"type": "string"
 								}
 							]
@@ -141,7 +136,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/v1/users/2",
+							"raw": "http://localhost:3000/v1/users/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -150,7 +145,7 @@
 							"path": [
 								"v1",
 								"users",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -164,7 +159,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4NjM4MTAsImlhdCI6MTY4MDg2MDIxMCwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl19.AGRscERM3QHYJRAsOZDCgg5Ayw8UGLtE_00ZvlJIsIc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXJnZWR1cCIsInN1YiI6IjEiLCJleHAiOjE2ODA4ODgyOTYsImlhdCI6MTY4MDg4NDY5Niwicm9sZXMiOlsiVVNFUiJdfQ.Naa9QYvRnAqajZ62BGN2m7AozpI3n2NQdtX0RlTqYLk",
 									"type": "string"
 								}
 							]
