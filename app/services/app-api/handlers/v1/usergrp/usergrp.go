@@ -46,7 +46,7 @@ func (h Handlers) Create(ctx context.Context, w http.ResponseWriter, r *http.Req
 	return web.Respond(ctx, w, usr, http.StatusCreated)
 }
 
-// Update updates a user in the system.
+// Update a user in the system.
 func (h Handlers) Update(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	var upd user.UpdateUser
 	if err := web.Decode(r, &upd); err != nil {

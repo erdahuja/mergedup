@@ -2,6 +2,8 @@ package cart
 
 import (
 	"context"
+	"fmt"
+	"time"
 )
 
 // Core manages the set of APIs for user access.
@@ -16,23 +18,29 @@ func NewCore(storer Storer) *Core {
 	}
 }
 
-// QueryFilter holds the available fields a query can be filtered on.
-type QueryFilter struct {
-	ID    *int64   `validate:"omitempty,uuid4"`
-}
-
-// ByID sets the ID field of the QueryFilter value.
-func (f *QueryFilter) ByID(id int64) {
-	var zero int64
-	if id != zero {
-		f.ID = &id
-	}
-}
-
 type Storer interface {
 	WithinTran(ctx context.Context, fn func(s Storer) error) error
 	Create(ctx context.Context, itm Cart) error
-	Delete(ctx context.Context, itm Cart) error
-	Query(ctx context.Context, filter QueryFilter) ([]Cart, error)
-	QueryByID(ctx context.Context, CartID int) (Cart, error)
+}
+
+func (c *Core) Create(ctx context.Context, np NewCart) (Cart, error) {
+	now := time.Now()
+	crt := Cart{
+		UserID:      np.UserID,
+		DateCreated: now,
+		DateUpdated: now,
+	}
+
+	tran := func(s Storer) error {
+		if err := s.Create(ctx, crt); err != nil {
+			return fmt.Errorf("create: %w", err)
+		}
+		return nil
+	}
+
+	if err := c.storer.WithinTran(ctx, tran); err != nil {
+		return Cart{}, fmt.Errorf("tran: %w", err)
+	}
+
+	return crt, nil
 }

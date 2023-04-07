@@ -84,7 +84,7 @@ func (s *Store) Update(ctx context.Context, usr user.User) error {
 		if errors.Is(err, database.ErrDBDuplicatedEntry) {
 			return user.ErrUniqueEmail
 		}
-		return fmt.Errorf("updating userID[%s]: %w", usr.ID, err)
+		return fmt.Errorf("updating userID[%d]: %w", usr.ID, err)
 	}
 
 	return nil

@@ -46,13 +46,14 @@ const (
 	RuleAdminOnly    = "allowOnlyAdmin"
 	RuleUserOnly     = "allowOnlyUser"
 )
+
 // ErrForbidden is returned when a auth issue is identified.
 var ErrForbidden = errors.New("attempted action is not allowed")
 
 // Config represents information required to initialize auth.
 type Config struct {
-	Log *zap.SugaredLogger
-	DB  *sqlx.DB
+	Log    *zap.SugaredLogger
+	DB     *sqlx.DB
 	Secret []byte
 }
 
@@ -99,7 +100,6 @@ func (a *Auth) Authenticate(ctx context.Context, bearerToken string) (Claims, er
 	})
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		fmt.Printf("%v %v", claims.Roles, claims.RegisteredClaims.Issuer)		
 		// Check the database for this user to verify they are still enabled.
 		if !a.isUserEnabled(ctx, *claims) {
 			return Claims{}, fmt.Errorf("user not enabled : %w", err)
