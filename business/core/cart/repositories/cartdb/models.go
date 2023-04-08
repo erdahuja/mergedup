@@ -13,7 +13,7 @@ type dbCart struct {
 	DateUpdated time.Time `db:"date_updated"`
 }
 
-// NewCart is what we require from clients when adding a Item.
+// NewCart is what we require from clients when adding a Cart.
 type NewCart struct {
 	UserID int64
 }

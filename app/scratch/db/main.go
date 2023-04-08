@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"mergedup/business/data/dbschema"
@@ -38,9 +37,6 @@ func run() error {
 	return nil
 }
 
-// ErrHelp provides context that help was given.
-var ErrHelp = errors.New("provided help")
-
 // Migrate creates the schema in the database.
 func Migrate(cfg config.DatabaseConfigurations) error {
 	db, err := database.Open(cfg)
@@ -49,11 +45,14 @@ func Migrate(cfg config.DatabaseConfigurations) error {
 	}
 	defer db.Close()
 
-	if err := dbschema.DropAll(context.TODO(), db); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	defer cancel()
+
+	if err := dbschema.DropAll(ctx, db); err != nil {
 		return fmt.Errorf("migrate database: %w", err)
 	}
 
-	if err := dbschema.Migrate(context.TODO(), db); err != nil {
+	if err := dbschema.Migrate(ctx, db); err != nil {
 		return fmt.Errorf("migrate database: %w", err)
 	}
 
@@ -69,7 +68,7 @@ func Seed(cfg config.DatabaseConfigurations) error {
 	}
 	defer db.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 
 	if err := dbschema.Seed(ctx, db); err != nil {

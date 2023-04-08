@@ -37,8 +37,8 @@ func (f *QueryFilter) ByQuantity(q int) {
 }
 
 // WithQuantity sets the Quantity field of the QueryFilter value.
-func (qf *QueryFilter) WithQuantity(quantity int) {
-	qf.Quantity = &quantity
+func (f *QueryFilter) WithQuantity(quantity int) {
+	f.Quantity = &quantity
 }
 
 // Create adds a Item to the database. It returns the created Item with

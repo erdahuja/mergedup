@@ -75,19 +75,18 @@ func run(log *zap.SugaredLogger) error {
 
 	// =========================================================================
 	// Start Debug Service
-
-	log.Infow("startup", "status", "debug v1 router started", "host", cfg.DebugHost)
-
+	
 	go func() {
 		if err := http.ListenAndServe(cfg.DebugHost, debug.Mux(build, log, db)); err != nil {
 			log.Fatal("shutdown", "status", "debug v1 router closed", cfg.DebugHost, "ERROR", err)
 		}
+		log.Infow("startup", "status", "debug v1 router started", "host", cfg.DebugHost)
 	}()
 
 	// =========================================================================
 	// Start API Service
 
-	log.Infow("startup", "status", "initializing V1 API support")
+	log.Infow("startup", "status", "initializing V1 API support", "host", cfg.APIHost)
 
 	return runAPI(cfg, db, log)
 }
@@ -107,8 +106,8 @@ func runAPI(cfg config.Configurations, db *sqlx.DB, log *zap.SugaredLogger) erro
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
 	authCfg := auth.Config{
-		Log:       log,
-		DB:        db,
+		Log:    log,
+		DB:     db,
 		Secret: []byte(cfg.Secret),
 	}
 
